@@ -683,12 +683,12 @@ export default function CopyModal({
                     value={h}
                     onChange={v => setForm(p => { const a = [...p.headlines]; a[i] = v; return { ...p, headlines: a } })}
                     onRemove={() => setForm(p => ({ ...p, headlines: p.headlines.filter((_, j) => j !== i) }))}
-                    readOnly={!isWriting}
+                    readOnly={false}
                   />
                 ))}
 
-                {form.headlines.length === 0 && !isWriting && (
-                  <p className="text-xs text-slate-400 dark:text-slate-600 italic py-4 text-center">Nenhuma headline salva.</p>
+                {form.headlines.length === 0 && (
+                  <p className="text-xs text-slate-400 dark:text-slate-600 italic py-4 text-center">Nenhuma headline ainda. Adicione abaixo.</p>
                 )}
 
                 <button type="button"

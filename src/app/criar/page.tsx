@@ -122,11 +122,12 @@ export default function CriarPage() {
   // Id do rascunho sendo editado (null = nova copy)
   const [editingId, setEditingId] = useState<string | null>(null)
 
-  const [hook,       setHook]       = useState('')
-  const [hookFormat, setHookFormat] = useState('')
-  const [body,       setBody]       = useState('')
-  const [bodyFormat, setBodyFormat] = useState('')
-  const [cta,        setCta]        = useState('')
+  const [hook,        setHook]        = useState('')
+  const [hookFormat,  setHookFormat]  = useState('')
+  const [extraHooks,  setExtraHooks]  = useState<string[]>([])
+  const [body,        setBody]        = useState('')
+  const [bodyFormat,  setBodyFormat]  = useState('')
+  const [cta,         setCta]         = useState('')
 
   const [name,        setName]        = useState('')
   const [model,       setModel]       = useState<BusinessModel>('TikTok Shop')
@@ -162,7 +163,7 @@ export default function CriarPage() {
 
   const resetForm = () => {
     setEditingId(null)
-    setHook(''); setHookFormat('')
+    setHook(''); setHookFormat(''); setExtraHooks([])
     setBody(''); setBodyFormat(''); setCta('')
     setName(''); setModel('TikTok Shop'); setProductId('')
     setAngles([]); setAngleInput(''); setHeadlines([]); setTags([]); setNotes('')
@@ -172,6 +173,7 @@ export default function CriarPage() {
     setEditingId(draft.id)
     setHook(draft.hook ?? '')
     setHookFormat(draft.hook_video_format ?? '')
+    setExtraHooks(draft.extra_hooks ?? [])
     setBody(draft.body ?? '')
     setBodyFormat(draft.body_video_format ?? '')
     setCta(draft.cta ?? '')
@@ -198,7 +200,7 @@ export default function CriarPage() {
       hook: hook || null, hook_video_format: hookFormat || null,
       body: body || null, body_video_format: bodyFormat || null,
       cta: cta || null, tags: finalTags, notes: notes || null,
-      extra_hooks: [], extra_ctas: [],
+      extra_hooks: extraHooks.filter(Boolean), extra_ctas: [],
     }
 
     if (editingId) {
@@ -310,6 +312,22 @@ export default function CriarPage() {
             </div>
 
             <WorkflowBlock type="hook" value={hook} onChange={setHook} formatValue={hookFormat} onFormatChange={setHookFormat} copies={copies} />
+
+            {extraHooks.map((h, i) => (
+              <div key={i} className="relative">
+                <WorkflowBlock type="hook" value={h} onChange={v => setExtraHooks(p => { const a = [...p]; a[i] = v; return a })} copies={copies} />
+                <button type="button"
+                  onClick={() => setExtraHooks(p => p.filter((_, j) => j !== i))}
+                  className="absolute top-3 right-3 text-slate-400 hover:text-red-500 text-lg leading-none transition-colors">×</button>
+              </div>
+            ))}
+
+            <button type="button"
+              onClick={() => setExtraHooks(p => [...p, ''])}
+              className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-dashed border-slate-300 dark:border-slate-600 rounded-xl px-3 py-2.5 w-full transition-colors hover:border-slate-500">
+              + Hook alternativo
+            </button>
+
             <WorkflowBlock type="body" value={body} onChange={setBody} formatValue={bodyFormat} onFormatChange={setBodyFormat} copies={copies} />
             <WorkflowBlock type="cta"    value={cta}    onChange={setCta}    copies={copies} />
           </div>
