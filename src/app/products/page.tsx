@@ -1,7 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Product, BusinessModel, BUSINESS_MODELS, MODEL_COLORS } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 
 const inputCls = 'w-full text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500'
 const labelCls = 'block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1'
@@ -12,14 +14,22 @@ const ALL_MODELS = BUSINESS_MODELS
 const EMPTY = {
   name: '', niche: '', offer: '', avatar: '',
   description: '', ingredients: '', pains: '', target_audience: '',
-  models: [] as string[],
+  models: [] as string[], image_url: '',
 }
 type FormState = typeof EMPTY
 
 // ── Card de produto ───────────────────────────────────────────────
-function ProductCard({ p, onEdit, onDelete }: { p: Product; onEdit: () => void; onDelete: () => void }) {
+function ProductCard({ p, onOpen, onEdit, onDelete }: { p: Product; onOpen: () => void; onEdit: () => void; onDelete: () => void }) {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all flex flex-col gap-3 p-4">
+    <div onClick={onOpen}
+      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all flex flex-col gap-3 p-4 cursor-pointer">
+
+      {/* Foto */}
+      {p.image_url && (
+        <div className="w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 -mt-1">
+          <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
+        </div>
+      )}
 
       {/* Nome */}
       <p className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 tracking-wide">
@@ -74,7 +84,7 @@ function ProductCard({ p, onEdit, onDelete }: { p: Product; onEdit: () => void; 
       )}
 
       {/* Ações */}
-      <div className="flex gap-1 border-t border-slate-100 dark:border-slate-800 pt-2 mt-auto">
+      <div className="flex gap-1 border-t border-slate-100 dark:border-slate-800 pt-2 mt-auto" onClick={e => e.stopPropagation()}>
         <button onClick={onEdit}
           className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-auto">
           Editar
@@ -90,7 +100,7 @@ function ProductCard({ p, onEdit, onDelete }: { p: Product; onEdit: () => void; 
 
 // ── Modal de formulário ───────────────────────────────────────────
 function ProductModal({
-  editing, form, onClose, onSubmit, set, toggleModel,
+  editing, form, onClose, onSubmit, set, toggleModel, setImageUrl,
 }: {
   editing: Product | null
   form: FormState
@@ -98,7 +108,26 @@ function ProductModal({
   onSubmit: (e: React.FormEvent) => void
   set: (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   toggleModel: (m: string) => void
+  setImageUrl: (url: string) => void
 }) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+
+  const handleFile = async (file: File) => {
+    setUploading(true)
+    const ext = file.name.split('.').pop()
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const { error } = await supabase.storage.from('product-images').upload(path, file)
+    if (error) {
+      alert(`Erro ao enviar imagem: ${error.message}`)
+      setUploading(false)
+      return
+    }
+    const { data } = supabase.storage.from('product-images').getPublicUrl(path)
+    setImageUrl(data.publicUrl)
+    setUploading(false)
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 w-full max-w-xl my-8 shadow-2xl">
@@ -116,6 +145,27 @@ function ProductModal({
 
         {/* Form */}
         <form onSubmit={onSubmit} className="p-6 space-y-4">
+
+          {/* Foto */}
+          <div>
+            <label className={labelCls}>Foto do produto</label>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden"
+              onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
+            {form.image_url ? (
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 group">
+                <img src={form.image_url} alt="" className="w-full h-full object-cover" />
+                <button type="button" onClick={() => setImageUrl('')}
+                  className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                  Remover
+                </button>
+              </div>
+            ) : (
+              <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                className="w-full aspect-video rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 text-sm hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex items-center justify-center">
+                {uploading ? 'Enviando...' : '+ Adicionar foto'}
+              </button>
+            )}
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -197,6 +247,7 @@ function ProductModal({
 
 // ── Página ────────────────────────────────────────────────────────
 export default function ProductsPage() {
+  const router = useRouter()
   const [products, setProducts]   = useState<Product[]>([])
   const [form, setForm]           = useState<FormState>(EMPTY)
   const [editing, setEditing]     = useState<Product | null>(null)
@@ -235,6 +286,7 @@ export default function ProductsPage() {
       pains:           form.pains           || null,
       target_audience: form.target_audience || null,
       models:          form.models,
+      image_url:       form.image_url || null,
     }
     if (editing) {
       await fetch(`/api/products/${editing.id}`, {
@@ -267,6 +319,7 @@ export default function ProductsPage() {
       pains:           p.pains           ?? '',
       target_audience: p.target_audience ?? '',
       models:          p.models          ?? [],
+      image_url:       p.image_url       ?? '',
     })
     setModalOpen(true)
   }
@@ -323,6 +376,7 @@ export default function ProductsPage() {
             <ProductCard
               key={p.id}
               p={p}
+              onOpen={() => router.push(`/products/${p.id}`)}
               onEdit={() => openEdit(p)}
               onDelete={() => handleDelete(p.id)}
             />
@@ -339,6 +393,7 @@ export default function ProductsPage() {
           onSubmit={handleSubmit}
           set={set}
           toggleModel={toggleModel}
+          setImageUrl={url => setForm(p => ({ ...p, image_url: url }))}
         />
       )}
     </div>

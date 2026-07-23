@@ -1,12 +1,12 @@
-export type BusinessModel = 'TikTok Shop' | 'Non-shop' | 'DR'
+export type BusinessModel = 'TikTok Shop' | 'Non-shop' | 'DTC'
 export type NshopLine = 'GMV' | 'Grow'
 
-export const BUSINESS_MODELS: BusinessModel[] = ['TikTok Shop', 'Non-shop', 'DR']
+export const BUSINESS_MODELS: BusinessModel[] = ['TikTok Shop', 'Non-shop', 'DTC']
 
 export const MODEL_COLORS: Record<string, string> = {
   'TikTok Shop': 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
   'Non-shop':    'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  'DR':          'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  'DTC':         'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
 }
 
 export const COPY_TAGS = ['Rodando', 'Teste', 'Validada', 'Pendente', 'Rascunho'] as const
@@ -63,6 +63,7 @@ export interface Product {
   pains: string | null
   target_audience: string | null
   models: string[]
+  image_url: string | null
   created_at: string
 }
 

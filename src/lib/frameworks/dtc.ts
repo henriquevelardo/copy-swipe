@@ -1,5 +1,5 @@
-export const drFramework = `
-FRAMEWORK DR (Direct Response — Facebook Ads)
+export const dtcFramework = `
+FRAMEWORK DTC (Direct-to-Consumer — Facebook Ads)
 Tom: Direto, assertivo, orientado a benefício e urgência. Pode ser mais "vendedor" — é anúncio assumido. Mas ainda crível.
 Ritmo: Hook agressivo nos 3s. Body constrói argumento de venda com prova e quebra de objeção.
 Estrutura: AIDA (Atenção -> Interesse -> Desejo -> Ação) ou Problema-Solução-Prova-Oferta.
