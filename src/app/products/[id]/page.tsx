@@ -145,7 +145,7 @@ export default function ProductDetailPage() {
           onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
 
         {form.image_url ? (
-          <div className="relative w-full aspect-[21/9] bg-slate-100 dark:bg-slate-800 group">
+          <div className="relative w-full h-48 bg-slate-100 dark:bg-slate-800 group">
             <img src={form.image_url} alt={form.name} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
               <button type="button" onClick={() => fileRef.current?.click()}
@@ -160,7 +160,7 @@ export default function ProductDetailPage() {
           </div>
         ) : (
           <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-            className="w-full aspect-[21/9] bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-sm hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex items-center justify-center">
+            className="w-full h-20 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-sm hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex items-center justify-center">
             {uploading ? 'Enviando...' : '+ Adicionar foto'}
           </button>
         )}
