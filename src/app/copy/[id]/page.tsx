@@ -491,8 +491,8 @@ export default function CopyPage() {
 
       {/* ── ABA INFO ── */}
       {tab === 'info' && (
-        <div className="flex-1 overflow-y-auto p-6 max-w-3xl space-y-5">
-          <div className="grid grid-cols-3 gap-4">
+        <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label className={labelCls}>Produto</label>
               <select value={form.product_id} onChange={set('product_id')} className={inputCls}>
@@ -548,7 +548,7 @@ export default function CopyPage() {
               })}
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <label className={labelCls}>Ângulo</label>
               <div className={`${inputCls} flex flex-wrap gap-1.5 min-h-[38px] cursor-text`}
@@ -606,16 +606,18 @@ export default function CopyPage() {
 
       {/* ── ABA HEADLINES ── */}
       {tab === 'headlines' && (
-        <div className="flex-1 overflow-y-auto p-6 max-w-2xl space-y-3">
+        <div className="flex-1 overflow-y-auto p-6 space-y-3">
           <p className="text-xs text-ink-soft dark:text-ink-soft-dark">
             Headlines que aparecem junto ao hook no vídeo. Associe cada headline a uma instrução visual selecionando o hook no preview.
           </p>
-          {form.headlines.map((h, i) => (
-            <HeadlineBlock key={i} index={i} value={h}
-              onChange={v => setForm(p => { const a = [...p.headlines]; a[i] = v; return { ...p, headlines: a } })}
-              onRemove={() => setForm(p => ({ ...p, headlines: p.headlines.filter((_, j) => j !== i) }))}
-            />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {form.headlines.map((h, i) => (
+              <HeadlineBlock key={i} index={i} value={h}
+                onChange={v => setForm(p => { const a = [...p.headlines]; a[i] = v; return { ...p, headlines: a } })}
+                onRemove={() => setForm(p => ({ ...p, headlines: p.headlines.filter((_, j) => j !== i) }))}
+              />
+            ))}
+          </div>
           {form.headlines.length === 0 && (
             <p className="text-xs text-ink-soft/60 dark:text-ink-soft-dark/60 italic py-4 text-center">Nenhuma headline ainda. Adicione abaixo.</p>
           )}

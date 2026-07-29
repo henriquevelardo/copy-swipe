@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           __html: `try{const s=localStorage.getItem('theme');if(s==='dark'||(!s&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}`
         }} />
       </head>
-      <body className="h-screen flex flex-col bg-paper dark:bg-paper-dark font-sans antialiased">
+      <body className="h-screen flex flex-col overflow-hidden bg-paper dark:bg-paper-dark font-sans antialiased">
         <nav className="flex-shrink-0 bg-card dark:bg-card-dark border-b border-line dark:border-line-dark px-6 py-3 flex items-center gap-1 z-40">
           <Link href="/" className="font-display font-bold text-base text-ink dark:text-ink-dark tracking-tight mr-4 flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-accent dark:bg-accent-dark" />
