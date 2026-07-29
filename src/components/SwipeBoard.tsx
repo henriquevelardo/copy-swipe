@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Copy, Product, COPY_TAGS, TAG_COLORS, TAG_ACTIVE_FILTER, MODEL_COLORS, BUSINESS_MODELS } from '@/lib/types'
+import { Copy, Product, COPY_TAGS, TAG_COLORS, MODEL_COLORS, BUSINESS_MODELS } from '@/lib/types'
 import { FormatSelect } from './FormatDropdown'
 import CopyCard from './CopyCard'
 
@@ -230,15 +230,11 @@ export default function SwipeBoard() {
 
       {/* Filtros — linha 2: tags + formatos + busca */}
       <div className="flex flex-wrap items-center gap-2 mb-5">
-        {/* Tags de status */}
-        <div className="flex gap-1.5">
-          {COPY_TAGS.map(tag => (
-            <button key={tag} onClick={() => setFilterTag(filterTag === tag ? '' : tag)}
-              className={`px-2.5 py-1.5 rounded tab-label border transition-colors ${filterTag === tag ? TAG_ACTIVE_FILTER[tag] : 'bg-card dark:bg-card-dark border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
-              {tag}
-            </button>
-          ))}
-        </div>
+        {/* Status */}
+        <select value={filterTag} onChange={e => setFilterTag(e.target.value)} className={selectCls}>
+          <option value="">Status</option>
+          {COPY_TAGS.map(tag => <option key={tag} value={tag}>{tag}</option>)}
+        </select>
 
         {/* Divisor */}
         <div className="h-5 w-px bg-line dark:bg-line-dark mx-1" />
