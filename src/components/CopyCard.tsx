@@ -83,7 +83,7 @@ export default function CopyCard({
 
       {/* Nome / identificador */}
       {active.name && (
-        <p className="tab-label text-ink-soft dark:text-ink-soft-dark -mb-1">
+        <p className="font-mono text-[11px] font-semibold tracking-wide uppercase text-ink-soft dark:text-ink-soft-dark -mb-1 break-words">
           {active.name}
         </p>
       )}
