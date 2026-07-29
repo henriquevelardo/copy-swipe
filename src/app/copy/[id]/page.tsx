@@ -112,20 +112,27 @@ function HeadlineBlock({ index, value, onChange, onRemove }: {
   )
 }
 
-/* ── Bloco editável (Hook/Body/CTA) — sempre em modo escrita ─────── */
-function EditableBlock({
-  label, value, onChange, rows = 4, placeholder,
-  formatValue, onFormatChange, onRemove,
-  selectable, isSelected, onSelect, selectionOrder,
+/* ── Bloco de escrita livre com pills de variante ─────────────────
+   Sem caixas — o texto flui na página. As pills acima trocam qual
+   versão você está vendo/editando; clicar na pill já ativa
+   inclui/remove ela do preview (para CTA, que é seleção única,
+   qualquer clique já troca a que vai pro preview).
+*/
+function VariantBlock({
+  label, values, editingIdx, onEditingIdxChange, onChangeValue,
+  onAddVariant, onRemoveVariant, stacked, onTogglePill, multiStack,
+  formatValue, onFormatChange, rows = 4, placeholder, showPills = true,
 }: {
-  label: string; value: string; onChange: (v: string) => void
-  rows?: number; placeholder?: string
+  label: string; values: string[]
+  editingIdx: number; onEditingIdxChange: (i: number) => void
+  onChangeValue: (i: number, v: string) => void
+  onAddVariant?: () => void; onRemoveVariant?: (i: number) => void
+  stacked: number[]; onTogglePill: (i: number) => void; multiStack: boolean
   formatValue?: string; onFormatChange?: (v: string) => void
-  onRemove?: () => void
-  selectable?: boolean; isSelected?: boolean; onSelect?: () => void; selectionOrder?: number
+  rows?: number; placeholder?: string; showPills?: boolean
 }) {
-  const sel = selectable && isSelected
   const taRef = useRef<HTMLTextAreaElement>(null)
+  const value = values[editingIdx] ?? ''
   useEffect(() => {
     const el = taRef.current
     if (!el) return
@@ -134,39 +141,57 @@ function EditableBlock({
   }, [value])
 
   return (
-    <div className={`transition-all rounded-md ${sel ? 'bg-ink dark:bg-ink-dark p-2.5 shadow-lg' : ''}`}>
-      <div className="flex items-center gap-1.5 mb-1">
-        {selectable && (
-          <button type="button" onClick={onSelect}
-            title={sel ? (selectionOrder != null ? `Posição ${selectionOrder} — clique para remover` : 'Selecionado') : 'Adicionar ao preview'}
-            className={`flex-shrink-0 relative w-4 h-4 rounded-full border-2 transition-all ${
-              sel ? 'border-card dark:border-card-dark bg-card dark:bg-card-dark' : 'border-line dark:border-line-dark hover:border-ink-soft dark:hover:border-ink-soft-dark'
+    <div className="space-y-1.5">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="tab-label text-ink-soft/60 dark:text-ink-soft-dark/60">{label}</span>
+        {showPills && values.length === 1 && !onAddVariant && (
+          <button type="button" onClick={() => onTogglePill(0)}
+            title="Incluir/remover do preview"
+            className={`flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full border transition-colors ${
+              stacked.includes(0) ? 'border-moss dark:border-moss-dark text-moss dark:text-moss-dark' : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:border-ink-soft dark:hover:border-ink-soft-dark'
             }`}>
-            {sel && selectionOrder != null
-              ? <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-ink dark:text-ink-dark leading-none">{selectionOrder}</span>
-              : sel ? <span className="block w-1 h-1 bg-ink dark:bg-ink-dark rounded-full m-auto" /> : null}
+            {stacked.includes(0) && <span className="w-1.5 h-1.5 rounded-full bg-moss dark:bg-moss-dark" />}
+            {stacked.includes(0) ? 'no preview' : 'fora do preview'}
           </button>
         )}
-        <span className={`text-[10px] font-bold uppercase tracking-widest ${sel ? 'text-card/60 dark:text-paper-dark/60' : 'text-ink-soft/50 dark:text-ink-soft-dark/50'}`}>{label}</span>
-        {formatValue !== undefined && onFormatChange && (
-          <FormatDropdown value={formatValue} onChange={onFormatChange} invertedStyle={sel} />
+        {showPills && (values.length > 1 || onAddVariant) && values.map((_, i) => {
+          const isEditing = i === editingIdx
+          const isStacked = stacked.includes(i)
+          return (
+            <button key={i} type="button"
+              onClick={() => { if (isEditing) onTogglePill(i); else onEditingIdxChange(i) }}
+              title={isEditing ? 'Clique para incluir/remover do preview' : 'Ver esta versão'}
+              className={`flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full border transition-colors ${
+                isEditing ? 'border-ink dark:border-ink-dark text-ink dark:text-ink-dark' : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:border-ink-soft dark:hover:border-ink-soft-dark'
+              }`}>
+              {isStacked && <span className="w-1.5 h-1.5 rounded-full bg-moss dark:bg-moss-dark" />}
+              {i + 1}
+            </button>
+          )
+        })}
+        {showPills && onAddVariant && (
+          <button type="button" onClick={onAddVariant}
+            className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full border border-dashed border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:border-accent dark:hover:border-accent-dark hover:text-accent dark:hover:text-accent-dark transition-colors">
+            + novo
+          </button>
         )}
-        {onRemove && (
-          <button type="button" onClick={onRemove}
-            className={`ml-auto text-sm leading-none transition-colors ${sel ? 'text-card/40 hover:text-accent-dark' : 'text-ink-soft/50 dark:text-ink-soft-dark/50 hover:text-accent dark:hover:text-accent-dark'}`}>×</button>
+        {showPills && onRemoveVariant && values.length > 1 && editingIdx > 0 && (
+          <button type="button" onClick={() => onRemoveVariant(editingIdx)}
+            className="text-xs text-ink-soft/60 dark:text-ink-soft-dark/60 hover:text-accent dark:hover:text-accent-dark transition-colors">
+            excluir esta versão
+          </button>
         )}
+        <div className="ml-auto">
+          {formatValue !== undefined && onFormatChange && <FormatDropdown value={formatValue} onChange={onFormatChange} />}
+        </div>
       </div>
       <textarea
         ref={taRef}
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={e => onChangeValue(editingIdx, e.target.value)}
         rows={rows}
         placeholder={placeholder}
-        className={`w-full text-base border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 resize-none overflow-hidden leading-relaxed ${
-          sel
-            ? 'bg-ink/90 dark:bg-ink-dark/90 text-card dark:text-paper-dark border-ink dark:border-ink-dark placeholder-card/40 dark:placeholder-paper-dark/40 focus:ring-accent/50 dark:focus:ring-accent-dark/50'
-            : 'bg-card dark:bg-card-dark text-ink dark:text-ink-dark border-line dark:border-line-dark placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60 focus:ring-accent/40 dark:focus:ring-accent-dark/40'
-        }`}
+        className="w-full text-base bg-transparent text-ink dark:text-ink-dark placeholder-ink-soft/50 dark:placeholder-ink-soft-dark/50 border-b border-line dark:border-line-dark focus:outline-none focus:border-accent dark:focus:border-accent-dark resize-none overflow-hidden leading-relaxed pb-2 transition-colors"
       />
     </div>
   )
@@ -194,6 +219,8 @@ export default function CopyPage() {
   const [selHookIdxs, setSelHookIdxs] = useState<number[]>([0])
   const [selCtaIdx, setSelCtaIdx]     = useState(0)
   const [selBody, setSelBody]         = useState(true)
+  const [editingHookIdx, setEditingHookIdx] = useState(0)
+  const [editingCtaIdx, setEditingCtaIdx]   = useState(0)
   const [copied, setCopied]           = useState(false)
   const [angleInput, setAngleInput]   = useState('')
 
@@ -231,6 +258,7 @@ export default function CopyPage() {
         source_copy_id: data.source_copy_id ?? '',
       })
       setSelHookIdxs([0]); setSelCtaIdx(0); setSelBody(true)
+      setEditingHookIdx(0); setEditingCtaIdx(0)
       setLoading(false)
     })
     fetch(`/api/copies/${id}/annotations`).then(r => r.json()).then(d => setAnnotations(Array.isArray(d) ? d : []))
@@ -243,20 +271,27 @@ export default function CopyPage() {
   const toggleTag = (tag: string) =>
     setForm(prev => ({ ...prev, tags: prev.tags.includes(tag) ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag] }))
 
-  const addExtraHook    = () => setForm(p => ({ ...p, extra_hooks: [...p.extra_hooks, ''] }))
+  const addExtraHook    = () => { setForm(p => ({ ...p, extra_hooks: [...p.extra_hooks, ''] })); setEditingHookIdx(form.extra_hooks.length + 1) }
   const updateExtraHook = (i: number, v: string) => setForm(p => { const a = [...p.extra_hooks]; a[i] = v; return { ...p, extra_hooks: a } })
   const removeExtraHook = (i: number) => {
     setForm(p => ({ ...p, extra_hooks: p.extra_hooks.filter((_, j) => j !== i) }))
     setSelHookIdxs(prev => prev.filter(idx => idx !== i + 1).map(idx => idx > i + 1 ? idx - 1 : idx))
+    setEditingHookIdx(prev => prev === i + 1 ? 0 : prev > i + 1 ? prev - 1 : prev)
   }
 
-  const addExtraCta    = () => setForm(p => ({ ...p, extra_ctas: [...p.extra_ctas, ''] }))
+  const addExtraCta    = () => { setForm(p => ({ ...p, extra_ctas: [...p.extra_ctas, ''] })); setEditingCtaIdx(form.extra_ctas.length + 1) }
   const updateExtraCta = (i: number, v: string) => setForm(p => { const a = [...p.extra_ctas]; a[i] = v; return { ...p, extra_ctas: a } })
   const removeExtraCta = (i: number) => {
     setForm(p => ({ ...p, extra_ctas: p.extra_ctas.filter((_, j) => j !== i) }))
     if (selCtaIdx === i + 1) setSelCtaIdx(0)
     else if (selCtaIdx > i + 1) setSelCtaIdx(s => s - 1)
+    setEditingCtaIdx(prev => prev === i + 1 ? 0 : prev > i + 1 ? prev - 1 : prev)
   }
+
+  const onChangeHookValue = (i: number, v: string) => { if (i === 0) setForm(p => ({ ...p, hook: v })); else updateExtraHook(i - 1, v) }
+  const onChangeCtaValue  = (i: number, v: string) => { if (i === 0) setForm(p => ({ ...p, cta: v })); else updateExtraCta(i - 1, v) }
+  const toggleHookStack = (i: number) => setSelHookIdxs(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i])
+  const selectCta = (i: number) => { setEditingCtaIdx(i); setSelCtaIdx(i) }
 
   const handleSave = async () => {
     setSaving(true)
@@ -293,8 +328,8 @@ export default function CopyPage() {
     router.push('/')
   }
 
-  const allHooks = [form.hook, ...form.extra_hooks].filter(Boolean) as string[]
-  const allCtas  = [form.cta, ...form.extra_ctas].filter(Boolean) as string[]
+  const allHooks = [form.hook, ...form.extra_hooks]
+  const allCtas  = [form.cta, ...form.extra_ctas]
 
   const previewSegments = useMemo(() => {
     const segs: { field: string; text: string }[] = []
@@ -405,56 +440,42 @@ export default function CopyPage() {
       {/* ── ABA COPY: split view ── */}
       {tab === 'copy' && (
         <div className="flex flex-1 overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-6 space-y-4 min-w-0">
-            {!isCreate && (allHooks.length > 1 || allCtas.length > 1) && (
-              <p className="text-xs text-ink-soft dark:text-ink-soft-dark flex items-center gap-1.5">
-                <span className="flex-shrink-0 inline-block w-3 h-3 rounded-full bg-ink dark:bg-ink-dark" />
-                Clique no círculo para selecionar/empilhar blocos no preview
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 min-w-0">
+            {!isCreate && (
+              <p className="text-xs text-ink-soft/60 dark:text-ink-soft-dark/60">
+                Clique numa versão pra ver — clique nela de novo pra incluir/remover do preview.
               </p>
             )}
-            <EditableBlock
-              label="Hook" value={form.hook} onChange={v => setForm(p => ({ ...p, hook: v }))}
+            <VariantBlock
+              label="Hook" values={allHooks}
+              editingIdx={editingHookIdx} onEditingIdxChange={setEditingHookIdx}
+              onChangeValue={onChangeHookValue}
+              onAddVariant={addExtraHook} onRemoveVariant={removeExtraHook}
+              stacked={selHookIdxs} onTogglePill={toggleHookStack} multiStack
               rows={4} placeholder="O gancho principal..."
               formatValue={form.hook_video_format} onFormatChange={v => setForm(p => ({ ...p, hook_video_format: v }))}
-              selectable={!isCreate} isSelected={selHookIdxs.includes(0)}
-              selectionOrder={selHookIdxs.includes(0) ? selHookIdxs.indexOf(0) + 1 : undefined}
-              onSelect={() => setSelHookIdxs(prev => prev.includes(0) ? prev.filter(i => i !== 0) : [...prev, 0])}
+              showPills={!isCreate}
             />
-            {form.extra_hooks.map((h, i) => (
-              <EditableBlock key={i} label={`Hook alternativo ${i + 1}`} value={h} onChange={v => updateExtraHook(i, v)}
-                rows={3} placeholder={`Hook alternativo ${i + 1}...`} onRemove={() => removeExtraHook(i)}
-                selectable={!isCreate} isSelected={selHookIdxs.includes(i + 1)}
-                selectionOrder={selHookIdxs.includes(i + 1) ? selHookIdxs.indexOf(i + 1) + 1 : undefined}
-                onSelect={() => setSelHookIdxs(prev => prev.includes(i + 1) ? prev.filter(j => j !== i + 1) : [...prev, i + 1])}
-              />
-            ))}
-            <button type="button" onClick={addExtraHook}
-              className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark border border-dashed border-line dark:border-line-dark rounded px-3 py-2 w-full transition-colors hover:border-accent dark:hover:border-accent-dark">
-              + Hook alternativo
-            </button>
 
-            <EditableBlock
-              label="Body" value={form.body} onChange={v => setForm(p => ({ ...p, body: v }))}
-              rows={10} placeholder="O desenvolvimento persuasivo..."
+            <VariantBlock
+              label="Body" values={[form.body]}
+              editingIdx={0} onEditingIdxChange={() => {}}
+              onChangeValue={(_, v) => setForm(p => ({ ...p, body: v }))}
+              stacked={selBody ? [0] : []} onTogglePill={() => setSelBody(s => !s)} multiStack={false}
+              rows={12} placeholder="O desenvolvimento persuasivo..."
               formatValue={form.body_video_format} onFormatChange={v => setForm(p => ({ ...p, body_video_format: v }))}
-              selectable={!isCreate} isSelected={selBody} onSelect={() => setSelBody(s => !s)}
+              showPills={!isCreate}
             />
 
-            <EditableBlock
-              label="CTA" value={form.cta} onChange={v => setForm(p => ({ ...p, cta: v }))}
+            <VariantBlock
+              label="CTA" values={allCtas}
+              editingIdx={editingCtaIdx} onEditingIdxChange={i => selectCta(i)}
+              onChangeValue={onChangeCtaValue}
+              onAddVariant={addExtraCta} onRemoveVariant={removeExtraCta}
+              stacked={[selCtaIdx]} onTogglePill={selectCta} multiStack={false}
               rows={2} placeholder="A chamada para ação..."
-              selectable={!isCreate} isSelected={selCtaIdx === 0} onSelect={() => setSelCtaIdx(0)}
+              showPills={!isCreate}
             />
-            {form.extra_ctas.map((c, i) => (
-              <EditableBlock key={i} label={`CTA alternativo ${i + 1}`} value={c} onChange={v => updateExtraCta(i, v)}
-                rows={2} placeholder={`CTA alternativo ${i + 1}...`} onRemove={() => removeExtraCta(i)}
-                selectable={!isCreate} isSelected={selCtaIdx === i + 1} onSelect={() => setSelCtaIdx(i + 1)}
-              />
-            ))}
-            <button type="button" onClick={addExtraCta}
-              className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark border border-dashed border-line dark:border-line-dark rounded px-3 py-2 w-full transition-colors hover:border-accent dark:hover:border-accent-dark">
-              + CTA alternativo
-            </button>
           </div>
 
           {/* ── PREVIEW ── */}
@@ -474,7 +495,7 @@ export default function CopyPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-ink-soft dark:text-ink-soft-dark italic">Selecione os blocos ao lado usando os círculos</p>
+                <p className="text-xs text-ink-soft dark:text-ink-soft-dark italic">Escreva ao lado e clique nas versões pra incluir no preview</p>
               )}
             </div>
             {previewSegments.length > 0 && (
