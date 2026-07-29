@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Copy, Product, MODEL_COLORS, BUSINESS_MODELS, COPY_TAGS, TAG_COLORS, TAG_ACTIVE_FILTER } from '@/lib/types'
-import CopyModal from '@/components/CopyModal'
 
 /* ══════════════════════════════════════════
    DIFF WORD-LEVEL
@@ -296,6 +296,7 @@ function DraggableCard({
    PÁGINA PRINCIPAL
 ══════════════════════════════════════════ */
 export default function CompararPage() {
+  const router = useRouter()
   const [copies, setCopies] = useState<Copy[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -313,7 +314,6 @@ export default function CompararPage() {
   const [idB, setIdB] = useState<string | null>(null)
 
   // Modal de visualização
-  const [viewCopy, setViewCopy] = useState<Copy | null>(null)
 
   // Drag state
   const [draggedId, setDraggedId] = useState<string | null>(null)
@@ -521,22 +521,10 @@ export default function CompararPage() {
               onDragOver={e => { e.preventDefault(); if (draggedId !== copy.id) setDragOverCardId(copy.id) }}
               onDragLeave={() => setDragOverCardId(null)}
               onDrop={handleDropOnCard(copy.id)}
-              onView={() => setViewCopy(copy)}
+              onView={() => router.push(`/copy/${copy.id}`)}
             />
           ))}
         </div>
-      )}
-
-      {viewCopy && (
-        <CopyModal
-          mode="view"
-          copy={viewCopy}
-          products={products}
-          rootCopies={copies.filter(c => !c.source_copy_id)}
-          onSave={() => setViewCopy(null)}
-          onClose={() => setViewCopy(null)}
-          onDelete={() => setViewCopy(null)}
-        />
       )}
     </div>
   )

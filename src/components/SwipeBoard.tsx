@@ -1,24 +1,18 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { Copy, Product, COPY_TAGS, TAG_COLORS, TAG_ACTIVE_FILTER, MODEL_COLORS, BUSINESS_MODELS } from '@/lib/types'
 import { FormatSelect } from './FormatDropdown'
 import CopyCard from './CopyCard'
-import CopyModal from './CopyModal'
 
 const MODELS = BUSINESS_MODELS
 
-type ModalState = {
-  mode: 'view' | 'edit' | 'create'
-  copy: Copy | null
-  parentId?: string
-} | null
-
 export default function SwipeBoard() {
+  const router = useRouter()
   const [copies, setCopies] = useState<Copy[]>([])
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
-  const [modal, setModal] = useState<ModalState>(null)
   const [viewParent, setViewParent] = useState<Copy | null>(null)
   const [draggedId, setDraggedId] = useState<string | null>(null)
   const [dragOverId, setDragOverId] = useState<string | null>(null)
@@ -142,13 +136,7 @@ export default function SwipeBoard() {
   const handleDelete = async (id: string) => {
     if (!confirm('Excluir esta copy? Não tem como desfazer.')) return
     await fetch(`/api/copies/${id}`, { method: 'DELETE' })
-    setModal(null)
     if (viewParent?.id === id) setViewParent(null)
-    fetchCopies()
-  }
-
-  const handleSave = () => {
-    setModal(null)
     fetchCopies()
   }
 
@@ -207,7 +195,7 @@ export default function SwipeBoard() {
             </button>
           </div>
           <button
-            onClick={() => setModal({ mode: 'create', copy: null })}
+            onClick={() => router.push('/copy/new')}
             className="px-4 py-2 bg-accent dark:bg-accent-dark text-card text-sm font-medium rounded-md hover:opacity-90 transition-opacity whitespace-nowrap"
           >
             + Nova copy
@@ -390,12 +378,12 @@ export default function SwipeBoard() {
                   variationCount={variationCount}
                   isVariation={isVariation}
                   isDragOver={isDragOver}
-                  onView={c => setModal({ mode: 'view', copy: c })}
-                  onEdit={c => setModal({ mode: 'edit', copy: c })}
+                  onView={c => router.push(`/copy/${c.id}`)}
+                  onEdit={c => router.push(`/copy/${c.id}`)}
                   onDelete={handleDelete}
                   onPublish={handlePublish}
                   onUpdateTags={handleUpdateTags}
-                  onCreateVariation={c => setModal({ mode: 'create', copy: null, parentId: c.id })}
+                  onCreateVariation={c => router.push(`/copy/new?parent=${c.id}`)}
                   onViewVariations={c => { setViewParent(c); window.scrollTo(0, 0) }}
                   onDragStart={id => setDraggedId(id)}
                   onDragEnd={() => { setDraggedId(null); setDragOverId(null) }}
@@ -425,7 +413,7 @@ export default function SwipeBoard() {
 
             const ListRow = ({ c, indent }: { c: Copy; indent?: boolean }) => (
               <div
-                onClick={() => setModal({ mode: 'view', copy: c })}
+                onClick={() => router.push(`/copy/${c.id}`)}
                 className={`flex items-center gap-3 px-4 py-2.5 bg-card dark:bg-card-dark rounded border border-line dark:border-line-dark cursor-pointer transition-colors hover:bg-paper dark:hover:bg-paper-dark ${indent ? 'border-l-[3px] border-l-teal dark:border-l-teal-dark' : ''}`}
               >
                 {/* Expansor (só na raiz) */}
@@ -492,7 +480,7 @@ export default function SwipeBoard() {
                       Publicar
                     </button>
                   )}
-                  <button onClick={() => setModal({ mode: 'edit', copy: c })}
+                  <button onClick={() => router.push(`/copy/${c.id}`)}
                     className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-2 py-1 rounded hover:bg-paper dark:hover:bg-paper-dark transition-colors">
                     Editar
                   </button>
@@ -516,19 +504,6 @@ export default function SwipeBoard() {
             )
           })}
         </div>
-      )}
-
-      {modal && (
-        <CopyModal
-          mode={modal.mode}
-          copy={modal.copy}
-          products={products}
-          rootCopies={rootCopies}
-          defaultParentId={modal.parentId}
-          onSave={handleSave}
-          onClose={() => setModal(null)}
-          onDelete={handleDelete}
-        />
       )}
     </div>
   )
