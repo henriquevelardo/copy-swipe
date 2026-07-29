@@ -372,7 +372,7 @@ export default function CopyPage() {
   if (loading) return <p className="text-sm text-ink-soft dark:text-ink-soft-dark">Carregando...</p>
 
   return (
-    <div className="flex flex-col h-[calc(100vh-96px)] -m-6">
+    <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center gap-3 px-6 py-3 border-b border-line dark:border-line-dark flex-shrink-0">
         <Link href="/" className="text-sm text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark transition-colors flex-shrink-0">← Swipe</Link>
