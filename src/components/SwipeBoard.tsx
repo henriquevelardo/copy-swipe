@@ -28,6 +28,7 @@ export default function SwipeBoard() {
   const [filterDateFrom, setFilterDateFrom] = useState('')
   const [filterDateTo, setFilterDateTo] = useState('')
   const [showCustomDate, setShowCustomDate] = useState(false)
+  const [filterHasVariations, setFilterHasVariations] = useState(false)
   const [search, setSearch] = useState('')
   const [searchDebounced, setSearchDebounced] = useState('')
 
@@ -104,9 +105,8 @@ export default function SwipeBoard() {
   const isFiltering = !!(searchDebounced || filterTag || filterProduct || filterHookFormat || filterBodyFormat)
 
   // Raízes filtradas pelo modelo selecionado
-  const filteredRoots = filterModel
-    ? rootCopies.filter(c => c.business_model === filterModel)
-    : rootCopies
+  const filteredRoots = (filterModel ? rootCopies.filter(c => c.business_model === filterModel) : rootCopies)
+    .filter(c => !filterHasVariations || (variationsByParent.get(c.id)?.length ?? 0) > 0)
 
   // O que mostrar:
   // – dentro de uma pasta (viewParent): raiz + suas variações
@@ -115,7 +115,7 @@ export default function SwipeBoard() {
   const displayedCopies = viewParent
     ? [viewParent, ...(variationsByParent.get(viewParent.id) ?? [])]
     : isFiltering
-      ? copies
+      ? copies.filter(c => !filterHasVariations || (!c.source_copy_id && (variationsByParent.get(c.id)?.length ?? 0) > 0))
       : filteredRoots
 
 
@@ -255,6 +255,15 @@ export default function SwipeBoard() {
         {/* Formato body */}
         <FormatSelect value={filterBodyFormat} onChange={setFilterBodyFormat} placeholder="Formato body" className={selectCls} />
 
+        {/* Só com variações */}
+        <button
+          onClick={() => setFilterHasVariations(v => !v)}
+          title="Mostrar só copies com variações"
+          className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded border transition-colors ${filterHasVariations ? 'border-teal dark:border-teal-dark text-teal dark:text-teal-dark bg-teal/5 dark:bg-teal-dark/10' : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${filterHasVariations ? 'bg-teal dark:bg-teal-dark' : 'border border-ink-soft/40 dark:border-ink-soft-dark/40'}`} />
+          Com variações
+        </button>
+
         {/* Filtro de data de publicação */}
         <select
           value={showCustomDate ? 'personalizado' : (filterDateFrom ? (() => {
@@ -302,9 +311,9 @@ export default function SwipeBoard() {
         />
 
         {/* Botão limpar filtros (aparece quando algum está ativo) */}
-        {(filterTag || filterProduct || filterHookFormat || filterBodyFormat || filterDateFrom || filterDateTo || search) && (
+        {(filterTag || filterProduct || filterHookFormat || filterBodyFormat || filterDateFrom || filterDateTo || filterHasVariations || search) && (
           <button
-            onClick={() => { setFilterTag(''); setFilterProduct(''); setFilterHookFormat(''); setFilterBodyFormat(''); setFilterDateFrom(''); setFilterDateTo(''); setShowCustomDate(false); setSearch('') }}
+            onClick={() => { setFilterTag(''); setFilterProduct(''); setFilterHookFormat(''); setFilterBodyFormat(''); setFilterDateFrom(''); setFilterDateTo(''); setShowCustomDate(false); setFilterHasVariations(false); setSearch('') }}
             className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-2 py-1 rounded hover:bg-card dark:hover:bg-card-dark transition-colors whitespace-nowrap"
           >
             Limpar ×
