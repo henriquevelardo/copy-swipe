@@ -115,7 +115,7 @@ function HeadlineBlock({ index, value, onChange, onRemove, readOnly }: {
           onChange={e => onChange(e.target.value)}
           placeholder={`Escreva a headline ${index + 1}...`}
           rows={2}
-          className="w-full bg-transparent text-card text-sm placeholder-card/40 focus:outline-none resize-none leading-relaxed"
+          className="w-full bg-transparent text-card dark:text-paper-dark text-sm placeholder-card/40 dark:placeholder-paper-dark/40 focus:outline-none resize-none leading-relaxed"
         />
       )}
     </div>

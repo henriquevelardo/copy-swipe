@@ -362,16 +362,16 @@ export default function CriarPage() {
                 {headlines.map((h, i) => (
                   <div key={i} className="rounded-md bg-ink dark:bg-ink-dark p-3">
                     <div className="flex items-center gap-2 mb-1.5">
-                      <span className="w-4 h-4 rounded-full bg-white/10 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
+                      <span className="w-4 h-4 rounded-full bg-card/10 dark:bg-paper-dark/10 text-card dark:text-paper-dark text-[10px] font-bold flex items-center justify-center flex-shrink-0">{i + 1}</span>
                       <button type="button" onClick={() => setHeadlines(p => p.filter((_, j) => j !== i))}
-                        className="ml-auto text-card/40 hover:text-accent-dark text-sm transition-colors">×</button>
+                        className="ml-auto text-card/40 dark:text-paper-dark/40 hover:text-accent-dark text-sm transition-colors">×</button>
                     </div>
                     <textarea
                       value={h}
                       onChange={e => setHeadlines(p => { const a = [...p]; a[i] = e.target.value; return a })}
                       placeholder={`Headline ${i + 1}...`}
                       rows={2}
-                      className="w-full bg-transparent text-card text-sm placeholder-card/40 focus:outline-none resize-none leading-relaxed"
+                      className="w-full bg-transparent text-card dark:text-paper-dark text-sm placeholder-card/40 dark:placeholder-paper-dark/40 focus:outline-none resize-none leading-relaxed"
                     />
                   </div>
                 ))}
