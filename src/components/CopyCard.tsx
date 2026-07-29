@@ -81,11 +81,18 @@ export default function CopyCard({
         </div>
       )}
 
-      {/* Nome / identificador */}
-      {active.name && (
-        <p className="font-mono text-[11px] font-semibold tracking-wide uppercase text-ink-soft dark:text-ink-soft-dark -mb-1 break-words">
-          {active.name}
-        </p>
+      {/* Cabeçalho: nome + produto numa linha discreta */}
+      {(active.name || active.product) && (
+        <div className="flex items-center gap-2 -mb-1 min-w-0">
+          {active.name && (
+            <p className="font-mono text-[11px] font-semibold tracking-wide uppercase text-ink-soft dark:text-ink-soft-dark truncate">
+              {active.name}
+            </p>
+          )}
+          {active.product && (
+            <span className="text-xs text-ink-soft/60 dark:text-ink-soft-dark/60 ml-auto truncate max-w-[8rem] flex-shrink-0">{active.product.name}</span>
+          )}
+        </div>
       )}
 
       {/* Indicador de variação no carrossel */}
@@ -96,8 +103,8 @@ export default function CopyCard({
         <p className="tab-label text-teal dark:text-teal-dark -mb-1">→ Variação</p>
       )}
 
-      {/* Modelo + nshop_line */}
-      <div className="flex items-center gap-2 flex-wrap">
+      {/* Modelo + status — uma única fileira */}
+      <div className="flex items-center gap-1.5 flex-wrap" onClick={e => e.stopPropagation()}>
         <span className={`tab-label px-2 py-0.5 rounded ${MODEL_COLORS[active.business_model]}`}>
           {active.business_model}
         </span>
@@ -106,13 +113,6 @@ export default function CopyCard({
             {active.nshop_line}
           </span>
         )}
-        {active.product && (
-          <span className="text-xs text-ink-soft dark:text-ink-soft-dark ml-auto truncate max-w-[8rem]">{active.product.name}</span>
-        )}
-      </div>
-
-      {/* Tags de status + botão rápido */}
-      <div className="flex items-center gap-1.5 flex-wrap" onClick={e => e.stopPropagation()}>
         {active.tags?.map(tag => (
           <span key={tag} className={`tab-label px-2 py-0.5 rounded ${TAG_COLORS[tag] ?? 'bg-ink-soft/10 text-ink-soft'}`}>
             {tag}
@@ -125,7 +125,7 @@ export default function CopyCard({
               className="tab-label text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-1.5 py-0.5 rounded hover:bg-paper dark:hover:bg-paper-dark transition-colors"
               title="Mudar status"
             >
-              {active.tags?.length ? '▾ status' : '+ status'}
+              {active.tags?.length ? '▾' : '+ status'}
             </button>
             {statusOpen && (
               <div className="absolute right-0 top-full mt-1 z-50 bg-card dark:bg-card-dark border border-line dark:border-line-dark rounded-md shadow-lg p-2 flex flex-col gap-1 min-w-[130px]">
@@ -168,20 +168,23 @@ export default function CopyCard({
         </p>
       )}
 
-      {/* Meta tags */}
-      <div className="flex items-center gap-1.5 flex-wrap">
-        {(active.angles?.length ? active.angles : active.angle ? [active.angle] : []).map(a => (
-          <span key={a} className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">{a}</span>
-        ))}
-        {active.hook_video_format && <span className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">{active.hook_video_format}</span>}
-        {active.body_video_format && active.body_video_format !== active.hook_video_format && <span className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">{active.body_video_format}</span>}
-        {active.metric && <span className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">{active.metric}</span>}
-        {active.published_at && (
-          <span className="ml-auto text-[10px] text-ink-soft dark:text-ink-soft-dark font-medium tabular-nums" title="Data de publicação no swipe">
-            pub. {new Date(active.published_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-          </span>
-        )}
-      </div>
+      {/* Meta — texto corrido, sem caixinhas, pra não competir visualmente com os badges */}
+      {(() => {
+        const angles = active.angles?.length ? active.angles : active.angle ? [active.angle] : []
+        const formats = [active.hook_video_format, active.body_video_format !== active.hook_video_format ? active.body_video_format : null].filter(Boolean)
+        const metaParts = [...angles, ...formats, active.metric].filter(Boolean)
+        if (!metaParts.length && !active.published_at) return null
+        return (
+          <div className="flex items-center gap-2 text-[11px] text-ink-soft/70 dark:text-ink-soft-dark/70">
+            {metaParts.length > 0 && <span className="truncate">{metaParts.join(' · ')}</span>}
+            {active.published_at && (
+              <span className="ml-auto flex-shrink-0 font-medium tabular-nums" title="Data de publicação no swipe">
+                pub. {new Date(active.published_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+              </span>
+            )}
+          </div>
+        )
+      })()}
 
       {/* ── Carrossel de variações ── */}
       {hasVariations && (
