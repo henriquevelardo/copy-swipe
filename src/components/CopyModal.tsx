@@ -34,8 +34,8 @@ const EMPTY: FormData = {
 }
 
 
-const inputCls = 'w-full text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500'
-const labelCls = 'block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1'
+const inputCls = 'w-full text-sm border border-line dark:border-line-dark rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/40 dark:focus:ring-accent-dark/40 bg-card dark:bg-card-dark text-ink dark:text-ink-dark placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60'
+const labelCls = 'block tab-label text-ink-soft dark:text-ink-soft-dark mb-1'
 
 function fieldLabel(field: string) {
   if (field === 'hook') return 'Hook'
@@ -75,8 +75,8 @@ function AnnotatedText({ text, annotations, field }: { text: string; annotations
     <>
       {segs.map((seg, i) =>
         seg.idx !== null
-          ? <mark key={i} className="bg-yellow-300/80 rounded-sm cursor-default">
-              {seg.text}<sup className="text-yellow-800 text-[10px] font-bold ml-0.5 select-none">{seg.idx + 1}</sup>
+          ? <mark key={i} className="bg-amber/30 dark:bg-amber-dark/30 rounded-sm cursor-default">
+              {seg.text}<sup className="text-amber dark:text-amber-dark text-[10px] font-bold ml-0.5 select-none">{seg.idx + 1}</sup>
             </mark>
           : <span key={i}>{seg.text}</span>
       )}
@@ -97,17 +97,17 @@ function HeadlineBlock({ index, value, onChange, onRemove, readOnly }: {
   }, [value])
 
   return (
-    <div className="rounded-xl bg-slate-900 dark:bg-slate-950 p-3 shadow-sm">
+    <div className="rounded-md bg-ink dark:bg-ink-dark p-3">
       <div className="flex items-center gap-2 mb-2">
-        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-white/10 text-white text-[10px] font-bold flex items-center justify-center">{index + 1}</span>
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Headline</span>
+        <span className="flex-shrink-0 w-5 h-5 rounded-full bg-card/10 text-card dark:text-paper-dark text-[10px] font-bold flex items-center justify-center">{index + 1}</span>
+        <span className="tab-label text-card/50 dark:text-paper-dark/50">Headline</span>
         {!readOnly && (
           <button type="button" onClick={onRemove}
-            className="ml-auto text-slate-600 hover:text-red-400 text-sm leading-none transition-colors">×</button>
+            className="ml-auto text-card/40 hover:text-accent-dark text-sm leading-none transition-colors">×</button>
         )}
       </div>
       {readOnly ? (
-        <p className="text-sm text-white leading-relaxed whitespace-pre-wrap">{value || <span className="italic text-slate-500">vazio</span>}</p>
+        <p className="text-sm text-card dark:text-paper-dark leading-relaxed whitespace-pre-wrap">{value || <span className="italic text-card/40">vazio</span>}</p>
       ) : (
         <textarea
           ref={taRef}
@@ -115,7 +115,7 @@ function HeadlineBlock({ index, value, onChange, onRemove, readOnly }: {
           onChange={e => onChange(e.target.value)}
           placeholder={`Escreva a headline ${index + 1}...`}
           rows={2}
-          className="w-full bg-transparent text-white text-sm placeholder-slate-600 focus:outline-none resize-none leading-relaxed"
+          className="w-full bg-transparent text-card text-sm placeholder-card/40 focus:outline-none resize-none leading-relaxed"
         />
       )}
     </div>
@@ -156,7 +156,7 @@ function Section({
   }, [value, showTextarea])
 
   return (
-    <div className={`transition-all rounded-xl ${sel ? 'bg-slate-900 dark:bg-white p-2.5 shadow-lg' : ''}`}>
+    <div className={`transition-all rounded-md ${sel ? 'bg-ink dark:bg-ink-dark p-2.5 shadow-lg' : ''}`}>
 
       {/* Cabeçalho compacto */}
       <div className="flex items-center gap-1.5 mb-1">
@@ -165,16 +165,16 @@ function Section({
             title={sel ? (selectionOrder != null ? `Posição ${selectionOrder} — clique para remover` : 'Selecionado') : 'Adicionar ao preview'}
             className={`flex-shrink-0 relative w-4 h-4 rounded-full border-2 transition-all ${
               sel
-                ? 'border-white dark:border-slate-800 bg-white dark:bg-slate-800'
-                : 'border-slate-300 dark:border-slate-600 hover:border-slate-500 dark:hover:border-slate-400'
+                ? 'border-card dark:border-card-dark bg-card dark:bg-card-dark'
+                : 'border-line dark:border-line-dark hover:border-ink-soft dark:hover:border-ink-soft-dark'
             }`}>
             {sel && selectionOrder != null
-              ? <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-slate-900 dark:text-white leading-none">{selectionOrder}</span>
-              : sel ? <span className="block w-1 h-1 bg-slate-900 dark:bg-white rounded-full m-auto" /> : null}
+              ? <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-ink dark:text-ink-dark leading-none">{selectionOrder}</span>
+              : sel ? <span className="block w-1 h-1 bg-ink dark:bg-ink-dark rounded-full m-auto" /> : null}
           </button>
         )}
         <span className={`text-[10px] font-bold uppercase tracking-widest ${
-          sel ? 'text-white/50 dark:text-slate-500' : 'text-slate-300 dark:text-slate-600'
+          sel ? 'text-card/60 dark:text-paper-dark/60' : 'text-ink-soft/50 dark:text-ink-soft-dark/50'
         }`}>{label}</span>
         {formatValue !== undefined && onFormatChange && (
           <FormatDropdown value={formatValue} onChange={onFormatChange} invertedStyle={sel} />
@@ -182,7 +182,7 @@ function Section({
         {onRemove && (
           <button type="button" onClick={onRemove}
             className={`ml-auto text-sm leading-none transition-colors ${
-              sel ? 'text-white/30 hover:text-red-300' : 'text-slate-300 dark:text-slate-600 hover:text-red-500'
+              sel ? 'text-card/40 hover:text-accent-dark' : 'text-ink-soft/50 dark:text-ink-soft-dark/50 hover:text-accent dark:hover:text-accent-dark'
             }`}>×</button>
         )}
       </div>
@@ -199,8 +199,8 @@ function Section({
           autoFocus={editing && !alwaysEdit}
           className={`w-full text-sm border rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 resize-none overflow-hidden leading-relaxed ${
             sel
-              ? 'bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-700 dark:border-slate-300 placeholder-white/30 dark:placeholder-slate-400 focus:ring-slate-500 dark:focus:ring-slate-400'
-              : 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-slate-300 dark:focus:ring-slate-600'
+              ? 'bg-ink/90 dark:bg-ink-dark/90 text-card dark:text-paper-dark border-ink dark:border-ink-dark placeholder-card/40 dark:placeholder-paper-dark/40 focus:ring-accent/50 dark:focus:ring-accent-dark/50'
+              : 'bg-card dark:bg-card-dark text-ink dark:text-ink-dark border-line dark:border-line-dark placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60 focus:ring-accent/40 dark:focus:ring-accent-dark/40'
           }`}
         />
       ) : (
@@ -208,14 +208,14 @@ function Section({
           onClick={() => setEditing(true)}
           onMouseUp={onMouseUp}
           title="Clique para editar"
-          className={`text-sm leading-relaxed rounded-xl p-4 whitespace-pre-wrap select-text cursor-text min-h-[3rem] transition-colors ${
+          className={`text-sm leading-relaxed rounded-md p-4 whitespace-pre-wrap select-text cursor-text min-h-[3rem] transition-colors ${
             sel
-              ? 'bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-200'
-              : 'bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10'
+              ? 'bg-ink/90 dark:bg-ink-dark/90 text-card dark:text-paper-dark hover:opacity-90'
+              : 'bg-paper dark:bg-paper-dark text-ink dark:text-ink-dark hover:bg-line/40 dark:hover:bg-line-dark/40'
           }`}>
           {annotations && annotationField
             ? <AnnotatedText text={value || ''} annotations={annotations} field={annotationField} />
-            : (value || <span className={`italic ${sel ? 'text-white/30 dark:text-slate-400' : 'text-slate-300 dark:text-slate-500'}`}>{placeholder ?? 'Vazio'}</span>)
+            : (value || <span className={`italic ${sel ? 'text-card/40 dark:text-paper-dark/40' : 'text-ink-soft/50 dark:text-ink-soft-dark/60'}`}>{placeholder ?? 'Vazio'}</span>)
           }
         </p>
       )}
@@ -394,18 +394,18 @@ export default function CopyModal({
   }
 
   const ActionBar = () => (
-    <div className="flex gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+    <div className="flex gap-3 pt-4 border-t border-line dark:border-line-dark">
       <button type="button" onClick={handleSubmit} disabled={saving}
-        className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-medium rounded-lg hover:bg-slate-700 dark:hover:bg-slate-100 disabled:opacity-50 transition-colors">
+        className="px-4 py-2 bg-ink dark:bg-ink-dark text-card dark:text-paper-dark text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-colors">
         {saving ? 'Salvando...' : isCreate ? 'Criar copy' : 'Salvar alterações'}
       </button>
       <button type="button" onClick={onClose}
-        className="px-4 py-2 text-slate-500 dark:text-slate-400 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        className="px-4 py-2 text-ink-soft dark:text-ink-soft-dark text-sm font-medium rounded-lg hover:bg-paper dark:hover:bg-paper-dark transition-colors">
         Cancelar
       </button>
       {!isCreate && copy && (
         <button type="button" onClick={() => { if (confirm('Excluir esta copy?')) onDelete(copy.id) }}
-          className="ml-auto px-4 py-2 text-red-500 text-sm font-medium rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+          className="ml-auto px-4 py-2 text-accent dark:text-accent-dark text-sm font-medium rounded hover:bg-accent/10 dark:hover:bg-accent-dark/10 transition-colors">
           Excluir
         </button>
       )}
@@ -415,25 +415,25 @@ export default function CopyModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-3 py-4">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-h-[92vh] flex flex-col overflow-hidden">
+      <div className="relative bg-card dark:bg-card-dark rounded-md shadow-2xl w-full max-h-[92vh] flex flex-col overflow-hidden">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-line dark:border-line-dark flex-shrink-0">
           <div className="flex items-center gap-3">
             {!isCreate && copy && (
               <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${MODEL_COLORS[copy.business_model]}`}>
                 {copy.business_model}
               </span>
             )}
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <h2 className="text-sm font-semibold text-ink dark:text-ink-dark">
               {isCreate && defaultParentId ? 'Nova Variação' : isCreate ? 'Nova Copy' : (copy?.name ?? 'Editar Copy')}
             </h2>
             {!isCreate && copy?.source_copy_id && (
-              <span className="text-xs px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full">↳ Variação</span>
+              <span className="tab-label px-2 py-0.5 bg-teal/10 dark:bg-teal-dark/15 text-teal dark:text-teal-dark rounded">→ Variação</span>
             )}
           </div>
           <button onClick={onClose}
-            className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xl transition-colors">×</button>
+            className="text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark w-8 h-8 flex items-center justify-center rounded-lg hover:bg-paper dark:hover:bg-paper-dark text-xl transition-colors">×</button>
         </div>
 
         {/* Body */}
@@ -441,11 +441,11 @@ export default function CopyModal({
 
           {/* ── PAINEL ESQUERDO ── */}
           <div className={`${isCreate || leftTab === 'headlines' ? 'w-full' : 'flex-1'} flex flex-col min-w-0 overflow-hidden`}>
-            <div className="flex border-b border-slate-100 dark:border-slate-800 flex-shrink-0 px-2">
+            <div className="flex border-b border-line dark:border-line-dark flex-shrink-0 px-2">
               {(['copy', 'info', 'headlines'] as const).map(tab => (
                 <button key={tab} onClick={() => setLeftTab(tab)}
-                  className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors ${leftTab === tab ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
-                  {tab === 'copy' ? '✍️ Copy' : tab === 'info' ? 'ℹ️ Info' : '🗞 Headlines'}
+                  className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors ${leftTab === tab ? 'text-ink dark:text-ink-dark border-b-2 border-ink dark:border-ink-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark'}`}>
+                  {tab === 'copy' ? 'Copy' : tab === 'info' ? 'Info' : 'Headlines'}
                 </button>
               ))}
             </div>
@@ -455,8 +455,8 @@ export default function CopyModal({
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
 
                 {!isCreate && (allHooks.length > 1 || allCtas.length > 1) && (
-                  <p className="text-xs text-slate-400 dark:text-slate-400 flex items-center gap-1.5">
-                    <span className="flex-shrink-0 inline-block w-3 h-3 rounded-full bg-slate-900 dark:bg-white" />
+                  <p className="text-xs text-ink-soft dark:text-ink-soft-dark flex items-center gap-1.5">
+                    <span className="flex-shrink-0 inline-block w-3 h-3 rounded-full bg-ink dark:bg-ink-dark" />
                     Clique no círculo para selecionar/empilhar blocos no preview
                   </p>
                 )}
@@ -498,7 +498,7 @@ export default function CopyModal({
                 ))}
 
                 <button type="button" onClick={addExtraHook}
-                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-dashed border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 w-full transition-colors hover:border-slate-500">
+                  className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark border border-dashed border-line dark:border-line-dark rounded px-3 py-2 w-full transition-colors hover:border-accent dark:hover:border-accent-dark">
                   + Hook alternativo
                 </button>
 
@@ -537,7 +537,7 @@ export default function CopyModal({
                 ))}
 
                 <button type="button" onClick={addExtraCta}
-                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-dashed border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 w-full transition-colors hover:border-slate-500">
+                  className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark border border-dashed border-line dark:border-line-dark rounded px-3 py-2 w-full transition-colors hover:border-accent dark:hover:border-accent-dark">
                   + CTA alternativo
                 </button>
 
@@ -576,7 +576,7 @@ export default function CopyModal({
                             className={`flex-1 py-2 rounded-lg text-sm font-semibold border transition-colors ${
                               form.nshop_line === line
                                 ? line === 'GMV' ? 'bg-blue-500 border-blue-500 text-white' : 'bg-teal-500 border-teal-500 text-white'
-                                : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
+                                : 'bg-card dark:bg-card-dark border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'
                             }`}>
                             {line}
                           </button>
@@ -603,7 +603,7 @@ export default function CopyModal({
                       const active = form.tags.includes(tag)
                       return (
                         <button key={tag} type="button" onClick={() => toggleTag(tag)}
-                          className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${active ? `${TAG_COLORS[tag]} border-transparent` : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+                          className={`tab-label px-3 py-1.5 rounded border transition-colors ${active ? `${TAG_COLORS[tag]} border-transparent` : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
                           {active ? '✓ ' : ''}{tag}
                         </button>
                       )
@@ -616,10 +616,10 @@ export default function CopyModal({
                     <div className={`${inputCls} flex flex-wrap gap-1.5 min-h-[38px] cursor-text`}
                       onClick={e => (e.currentTarget.querySelector('input') as HTMLInputElement)?.focus()}>
                       {form.angles.map((a, i) => (
-                        <span key={i} className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium px-2 py-0.5 rounded-full">
+                        <span key={i} className="inline-flex items-center gap-1 bg-paper dark:bg-paper-dark text-ink dark:text-ink-dark text-xs font-medium px-2 py-0.5 rounded">
                           {a}
                           <button type="button" onClick={() => setForm(p => ({ ...p, angles: p.angles.filter((_, j) => j !== i) }))}
-                            className="text-slate-400 hover:text-red-500 leading-none">×</button>
+                            className="text-ink-soft dark:text-ink-soft-dark hover:text-accent dark:hover:text-accent-dark leading-none">×</button>
                         </span>
                       ))}
                       <input
@@ -672,7 +672,7 @@ export default function CopyModal({
             {/* ── ABA HEADLINES ── */}
             {leftTab === 'headlines' && (
               <div className="flex-1 overflow-y-auto p-6 space-y-3">
-                <p className="text-xs text-slate-400 dark:text-slate-500">
+                <p className="text-xs text-ink-soft dark:text-ink-soft-dark">
                   Headlines que aparecem junto ao hook no vídeo. Associe cada headline a uma instrução visual em Instruções Visuais.
                 </p>
 
@@ -688,12 +688,12 @@ export default function CopyModal({
                 ))}
 
                 {form.headlines.length === 0 && (
-                  <p className="text-xs text-slate-400 dark:text-slate-600 italic py-4 text-center">Nenhuma headline ainda. Adicione abaixo.</p>
+                  <p className="text-xs text-ink-soft/60 dark:text-ink-soft-dark/60 italic py-4 text-center">Nenhuma headline ainda. Adicione abaixo.</p>
                 )}
 
                 <button type="button"
                   onClick={() => setForm(p => ({ ...p, headlines: [...p.headlines, ''] }))}
-                  className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-dashed border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2.5 w-full transition-colors hover:border-slate-500">
+                  className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark border border-dashed border-line dark:border-line-dark rounded px-3 py-2.5 w-full transition-colors hover:border-accent dark:hover:border-accent-dark">
                   + Adicionar headline
                 </button>
 
@@ -704,12 +704,12 @@ export default function CopyModal({
 
           {/* ── PAINEL DIREITO ── */}
           {!isCreate && leftTab !== 'headlines' && (
-            <div className="w-1/2 flex-shrink-0 border-l border-slate-100 dark:border-slate-800 flex flex-col bg-slate-50 dark:bg-slate-800/30">
-              <div className="flex border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+            <div className="w-1/2 flex-shrink-0 border-l border-line dark:border-line-dark flex flex-col bg-paper dark:bg-paper-dark">
+              <div className="flex border-b border-line dark:border-line-dark flex-shrink-0">
                 {(['preview', 'visual'] as const).map(tab => (
                   <button key={tab} onClick={() => setRightTab(tab)}
-                    className={`flex-1 px-3 py-3 text-xs font-semibold uppercase tracking-widest transition-colors ${rightTab === tab ? 'text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white' : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
-                    {tab === 'preview' ? '👁 Preview' : 'Instruções Visuais'}
+                    className={`flex-1 px-3 py-3 text-xs font-semibold uppercase tracking-widest transition-colors ${rightTab === tab ? 'text-ink dark:text-ink-dark border-b-2 border-ink dark:border-ink-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark'}`}>
+                    {tab === 'preview' ? 'Preview' : 'Instruções Visuais'}
                   </button>
                 ))}
               </div>
@@ -721,14 +721,14 @@ export default function CopyModal({
                   <div className="flex-1 overflow-y-auto flex flex-col">
                     <div className="flex-1 p-6">
                       {text
-                        ? <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-wrap select-text">{text}</p>
-                        : <p className="text-xs text-slate-400 dark:text-slate-500 italic">Selecione os blocos na aba Copy usando os círculos</p>
+                        ? <p className="text-sm text-ink dark:text-ink-dark leading-relaxed whitespace-pre-wrap select-text">{text}</p>
+                        : <p className="text-xs text-ink-soft dark:text-ink-soft-dark italic">Selecione os blocos na aba Copy usando os círculos</p>
                       }
                     </div>
                     {text && (
                       <div className="px-4 pb-4 flex-shrink-0">
                         <button type="button" onClick={handleCopy}
-                          className={`w-full text-sm py-2.5 rounded-xl font-medium transition-colors ${copied ? 'bg-green-500 text-white' : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-100'}`}>
+                          className={`w-full text-sm py-2.5 rounded-md font-medium transition-colors ${copied ? 'bg-moss text-card' : 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark hover:opacity-90'}`}>
                           {copied ? '✓ Copiado!' : 'Copiar copy completa'}
                         </button>
                       </div>
@@ -741,30 +741,30 @@ export default function CopyModal({
               {rightTab === 'visual' && (
                 <div className="flex-1 overflow-y-auto flex flex-col">
                   {!pending && (
-                    <p className="text-xs text-slate-400 dark:text-slate-400 px-4 py-3">
+                    <p className="text-xs text-ink-soft dark:text-ink-soft-dark px-4 py-3">
                       No modo leitura, selecione texto para anotar
                     </p>
                   )}
                   <div className="flex-1 overflow-y-auto p-3 space-y-3">
                     {pending && (
-                      <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-3 border border-yellow-200 dark:border-yellow-700/50 space-y-2.5">
-                        <p className="text-xs font-medium text-yellow-700 dark:text-yellow-400 uppercase tracking-wide">
+                      <div className="bg-amber/10 dark:bg-amber-dark/10 rounded-md p-3 border border-amber/30 dark:border-amber-dark/30 space-y-2.5">
+                        <p className="tab-label text-amber dark:text-amber-dark">
                           {fieldLabel(pending.field)}
                         </p>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 italic line-clamp-2 bg-white dark:bg-slate-800 rounded-lg px-2 py-1.5">"{pending.selectedText}"</p>
+                        <p className="text-xs text-ink-soft dark:text-ink-soft-dark italic line-clamp-2 bg-card dark:bg-card-dark rounded px-2 py-1.5">"{pending.selectedText}"</p>
                         <textarea value={annInstruction} onChange={e => setAnnInstruction(e.target.value)}
                           placeholder="Instrução para o editor de vídeo..." rows={4} autoFocus
-                          className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-800 text-slate-900 dark:text-white resize-none placeholder-slate-400 dark:placeholder-slate-500" />
+                          className="w-full text-sm border border-line dark:border-line-dark rounded px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-amber/40 bg-card dark:bg-card-dark text-ink dark:text-ink-dark resize-none placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60" />
                         {/* Headline selector — só aparece para campos hook e se houver headlines */}
                         {pending.field.startsWith('hook') && form.headlines.length > 0 && (
                           <div>
-                            <label className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-1">
+                            <label className="text-[10px] font-semibold uppercase tracking-widest text-ink-soft dark:text-ink-soft-dark block mb-1">
                               Headline que acompanha este hook
                             </label>
                             <select
                               value={pendingHeadline}
                               onChange={e => setPendingHeadline(e.target.value)}
-                              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                              className="w-full text-sm border border-line dark:border-line-dark rounded px-2.5 py-2 focus:outline-none focus:ring-2 focus:ring-amber/40 bg-card dark:bg-card-dark text-ink-soft dark:text-ink-soft-dark">
                               <option value="">— Nenhuma headline —</option>
                               {form.headlines.map((h, i) => (
                                 <option key={i} value={h}>{h || `Headline ${i + 1}`}</option>
@@ -774,30 +774,30 @@ export default function CopyModal({
                         )}
                         <div className="flex gap-2">
                           <button onClick={saveAnnotation} disabled={savingAnn || !annInstruction.trim()}
-                            className="flex-1 text-xs py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-medium disabled:opacity-40 transition-colors">
+                            className="flex-1 text-xs py-1.5 bg-amber dark:bg-amber-dark text-card rounded font-medium disabled:opacity-40 hover:opacity-90 transition-colors">
                             {savingAnn ? 'Salvando...' : 'Salvar'}
                           </button>
                           <button onClick={() => { setPending(null); setAnnInstruction(''); setPendingHeadline(''); window.getSelection()?.removeAllRanges() }}
-                            className="text-xs py-1.5 px-3 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors">✕</button>
+                            className="text-xs py-1.5 px-3 text-ink-soft dark:text-ink-soft-dark hover:bg-line/40 dark:hover:bg-line-dark/40 rounded transition-colors">✕</button>
                         </div>
                       </div>
                     )}
                     {annotations.length > 0
                       ? annotations.map((ann, i) => (
-                          <div key={ann.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 group space-y-2">
+                          <div key={ann.id} className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark p-3 group space-y-2">
                             <div className="flex items-start gap-2">
-                              <span className="flex-shrink-0 w-5 h-5 bg-yellow-400 dark:bg-yellow-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{i + 1}</span>
-                              <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                              <span className="flex-shrink-0 w-5 h-5 bg-amber dark:bg-amber-dark text-card text-[10px] font-bold rounded-full flex items-center justify-center">{i + 1}</span>
+                              <span className="tab-label bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-1.5 py-0.5 rounded">
                                 {fieldLabel(ann.field)}
                               </span>
-                              <button onClick={() => deleteAnnotation(ann.id)} className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-red-400 hover:text-red-600 transition-all">✕</button>
+                              <button onClick={() => deleteAnnotation(ann.id)} className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-accent dark:text-accent-dark hover:opacity-70 transition-all">✕</button>
                             </div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 italic line-clamp-2">"{ann.selected_text}"</p>
-                            <p className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed">{ann.instruction}</p>
+                            <p className="text-xs text-ink-soft dark:text-ink-soft-dark italic line-clamp-2">"{ann.selected_text}"</p>
+                            <p className="text-sm text-ink dark:text-ink-dark leading-relaxed">{ann.instruction}</p>
                             {/* Headline associada — só para hooks */}
                             {ann.field.startsWith('hook') && (
-                              <div className="pt-1 border-t border-slate-100 dark:border-slate-700">
-                                <label className="text-[10px] font-semibold uppercase tracking-widest text-slate-300 dark:text-slate-600 block mb-1">Headline</label>
+                              <div className="pt-1 border-t border-line dark:border-line-dark">
+                                <label className="text-[10px] font-semibold uppercase tracking-widest text-ink-soft/50 dark:text-ink-soft-dark/50 block mb-1">Headline</label>
                                 {form.headlines.length > 0 ? (
                                   <select
                                     value={ann.headline ?? ''}
@@ -809,15 +809,15 @@ export default function CopyModal({
                                       })
                                       setAnnotations(prev => prev.map(a => a.id === ann.id ? { ...a, headline: v || null } : a))
                                     }}
-                                    className="w-full text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 focus:outline-none">
+                                    className="w-full text-xs border border-line dark:border-line-dark rounded-lg px-2 py-1.5 bg-card dark:bg-card-dark text-ink-soft dark:text-ink-soft-dark focus:outline-none">
                                     <option value="">— Nenhuma —</option>
                                     {form.headlines.map((h, j) => (
                                       <option key={j} value={h}>{h || `Headline ${j + 1}`}</option>
                                     ))}
                                   </select>
                                 ) : (
-                                  <p className="text-xs text-slate-300 dark:text-slate-600 italic">
-                                    {ann.headline ?? 'Sem headline — adicione na aba 🗞 Headlines'}
+                                  <p className="text-xs text-ink-soft/50 dark:text-ink-soft-dark/50 italic">
+                                    {ann.headline ?? 'Sem headline — adicione na aba Headlines'}
                                   </p>
                                 )}
                               </div>
@@ -826,7 +826,7 @@ export default function CopyModal({
                         ))
                       : !pending && (
                           <div className="text-center py-10">
-                            <p className="text-xs text-slate-400 dark:text-slate-400 leading-relaxed">Selecione qualquer trecho no modo leitura e adicione instruções visuais</p>
+                            <p className="text-xs text-ink-soft dark:text-ink-soft-dark leading-relaxed">Selecione qualquer trecho no modo leitura e adicione instruções visuais</p>
                           </div>
                         )
                     }

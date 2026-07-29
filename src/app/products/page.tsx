@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Product, BusinessModel, BUSINESS_MODELS, MODEL_COLORS } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 
-const inputCls = 'w-full text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500'
-const labelCls = 'block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1'
+const inputCls = 'w-full text-sm border border-line dark:border-line-dark rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent/40 dark:focus:ring-accent-dark/40 bg-card dark:bg-card-dark text-ink dark:text-ink-dark placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60'
+const labelCls = 'block tab-label text-ink-soft dark:text-ink-soft-dark mb-1'
 const areaCls  = `${inputCls} resize-none leading-relaxed`
 
 const ALL_MODELS = BUSINESS_MODELS
@@ -22,17 +22,17 @@ type FormState = typeof EMPTY
 function ProductCard({ p, onOpen, onEdit, onDelete }: { p: Product; onOpen: () => void; onEdit: () => void; onDelete: () => void }) {
   return (
     <div onClick={onOpen}
-      className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all flex flex-col gap-3 p-4 cursor-pointer">
+      className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark hover:border-ink-soft dark:hover:border-ink-soft-dark hover:shadow-sm transition-all flex flex-col gap-3 p-4 cursor-pointer">
 
       {/* Foto */}
       {p.image_url && (
-        <div className="w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 -mt-1">
+        <div className="w-full aspect-video rounded-lg overflow-hidden bg-paper dark:bg-paper-dark -mt-1">
           <img src={p.image_url} alt={p.name} className="w-full h-full object-cover" />
         </div>
       )}
 
       {/* Nome */}
-      <p className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 tracking-wide">
+      <p className="text-xs font-mono font-semibold text-ink-soft dark:text-ink-soft-dark tracking-wide">
         {p.name}
       </p>
 
@@ -40,20 +40,20 @@ function ProductCard({ p, onOpen, onEdit, onDelete }: { p: Product; onOpen: () =
       <div className="flex gap-1.5 flex-wrap">
         {(p.models ?? []).length > 0
           ? (p.models ?? []).map(m => (
-              <span key={m} className={`text-xs font-medium px-2 py-0.5 rounded-full ${MODEL_COLORS[m]}`}>{m}</span>
+              <span key={m} className={`tab-label px-2 py-0.5 rounded ${MODEL_COLORS[m]}`}>{m}</span>
             ))
-          : <span className="text-xs text-slate-300 dark:text-slate-600 italic">Sem modelo</span>
+          : <span className="text-xs text-ink-soft/50 dark:text-ink-soft-dark/50 italic">Sem modelo</span>
         }
       </div>
 
       {/* Nicho / descrição */}
       {p.niche && (
-        <p className="text-sm font-medium text-slate-800 dark:text-slate-100 leading-snug">
+        <p className="text-sm font-medium text-ink dark:text-ink-dark leading-snug">
           {p.niche}
         </p>
       )}
       {p.description && (
-        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+        <p className="text-xs text-ink-soft dark:text-ink-soft-dark line-clamp-2 leading-relaxed">
           {p.description}
         </p>
       )}
@@ -62,7 +62,7 @@ function ProductCard({ p, onOpen, onEdit, onDelete }: { p: Product; onOpen: () =
       {p.pains && (
         <div className="flex flex-wrap gap-1">
           {p.pains.split(',').slice(0, 4).map(d => (
-            <span key={d.trim()} className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full">
+            <span key={d.trim()} className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">
               {d.trim()}
             </span>
           ))}
@@ -71,26 +71,26 @@ function ProductCard({ p, onOpen, onEdit, onDelete }: { p: Product; onOpen: () =
 
       {/* Público alvo */}
       {p.target_audience && (
-        <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed line-clamp-1">
-          👥 {p.target_audience}
+        <p className="text-xs text-ink-soft dark:text-ink-soft-dark leading-relaxed line-clamp-1">
+          <span className="tab-label text-ink-soft/60 dark:text-ink-soft-dark/60 mr-1">Público</span>{p.target_audience}
         </p>
       )}
 
       {/* Oferta */}
       {p.offer && (
-        <p className="text-xs text-slate-400 dark:text-slate-500 line-clamp-1">
-          💰 {p.offer}
+        <p className="text-xs text-ink-soft dark:text-ink-soft-dark line-clamp-1">
+          <span className="tab-label text-ink-soft/60 dark:text-ink-soft-dark/60 mr-1">Oferta</span>{p.offer}
         </p>
       )}
 
       {/* Ações */}
-      <div className="flex gap-1 border-t border-slate-100 dark:border-slate-800 pt-2 mt-auto" onClick={e => e.stopPropagation()}>
+      <div className="flex gap-1 border-t border-line dark:border-line-dark pt-2 mt-auto" onClick={e => e.stopPropagation()}>
         <button onClick={onEdit}
-          className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-auto">
+          className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-2 py-1 rounded hover:bg-paper dark:hover:bg-paper-dark transition-colors ml-auto">
           Editar
         </button>
         <button onClick={onDelete}
-          className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+          className="text-xs text-accent dark:text-accent-dark hover:opacity-70 px-2 py-1 rounded transition-colors">
           Excluir
         </button>
       </div>
@@ -130,15 +130,15 @@ function ProductModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 w-full max-w-xl my-8 shadow-2xl">
+      <div className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark w-full max-w-xl my-8 shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-          <h2 className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-line dark:border-line-dark">
+          <h2 className="text-sm font-semibold text-ink dark:text-ink-dark">
             {editing ? `Editando: ${editing.name}` : 'Novo produto'}
           </h2>
           <button onClick={onClose}
-            className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 text-lg leading-none transition-colors">
+            className="text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark text-lg leading-none transition-colors">
             ✕
           </button>
         </div>
@@ -152,7 +152,7 @@ function ProductModal({
             <input ref={fileRef} type="file" accept="image/*" className="hidden"
               onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
             {form.image_url ? (
-              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 group">
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-paper dark:bg-paper-dark group">
                 <img src={form.image_url} alt="" className="w-full h-full object-cover" />
                 <button type="button" onClick={() => setImageUrl('')}
                   className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
@@ -161,7 +161,7 @@ function ProductModal({
               </div>
             ) : (
               <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-                className="w-full aspect-video rounded-lg border-2 border-dashed border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 text-sm hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex items-center justify-center">
+                className="w-full aspect-video rounded-lg border-2 border-dashed border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark text-sm hover:border-accent dark:hover:border-accent-dark hover:text-ink dark:hover:text-ink-dark transition-colors flex items-center justify-center">
                 {uploading ? 'Enviando...' : '+ Adicionar foto'}
               </button>
             )}
@@ -185,7 +185,7 @@ function ProductModal({
                 const active = form.models.includes(m)
                 return (
                   <button key={m} type="button" onClick={() => toggleModel(m)}
-                    className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${active ? `${MODEL_COLORS[m]} border-transparent` : 'border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+                    className={`tab-label px-3 py-1.5 rounded border transition-colors ${active ? `${MODEL_COLORS[m]} border-transparent` : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
                     {active ? '✓ ' : ''}{m}
                   </button>
                 )
@@ -229,13 +229,13 @@ function ProductModal({
             <input value={form.offer} onChange={set('offer')} placeholder="preço, desconto, garantia, bônus..." className={inputCls} />
           </div>
 
-          <div className="flex gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex gap-3 pt-2 border-t border-line dark:border-line-dark">
             <button type="submit"
-              className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-medium rounded-lg hover:bg-slate-700 dark:hover:bg-slate-100 transition-colors">
+              className="px-4 py-2 bg-ink dark:bg-ink-dark text-card dark:text-paper-dark text-sm font-medium rounded-lg hover:opacity-90 transition-colors">
               {editing ? 'Salvar alterações' : 'Criar produto'}
             </button>
             <button type="button" onClick={onClose}
-              className="px-4 py-2 text-slate-500 dark:text-slate-400 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              className="px-4 py-2 text-ink-soft dark:text-ink-soft-dark text-sm font-medium rounded-lg hover:bg-paper dark:hover:bg-paper-dark transition-colors">
               Cancelar
             </button>
           </div>
@@ -344,30 +344,30 @@ export default function ProductsPage() {
     <div>
       {/* ── Barra superior ── */}
       <div className="flex items-center gap-3 mb-5">
-        <div className="flex gap-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-1">
+        <div className="flex gap-1 bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark p-1">
           <button onClick={() => setFilterModel('')}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === '' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === '' ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
             Todos
           </button>
           {ALL_MODELS.map(m => (
             <button key={m} onClick={() => setFilterModel(filterModel === m ? '' : m)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === m ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === m ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
               {m}
             </button>
           ))}
         </div>
 
         <button onClick={() => { setEditing(null); setForm(EMPTY); setModalOpen(true) }}
-          className="ml-auto px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-medium rounded-xl hover:bg-slate-700 dark:hover:bg-slate-100 transition-colors whitespace-nowrap">
+          className="ml-auto px-4 py-2 bg-ink dark:bg-ink-dark text-card dark:text-paper-dark text-sm font-medium rounded-md hover:opacity-90 transition-colors whitespace-nowrap">
           + Novo produto
         </button>
       </div>
 
       {/* ── Grid de cards ── */}
       {loading ? (
-        <p className="text-sm text-slate-400 dark:text-slate-600">Carregando...</p>
+        <p className="text-sm text-ink-soft dark:text-ink-soft-dark">Carregando...</p>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-slate-400 dark:text-slate-600">
+        <p className="text-sm text-ink-soft dark:text-ink-soft-dark">
           {filterModel ? `Nenhum produto em ${filterModel}.` : 'Nenhum produto cadastrado ainda.'}
         </p>
       ) : (

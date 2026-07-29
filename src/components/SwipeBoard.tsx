@@ -173,22 +173,22 @@ export default function SwipeBoard() {
     setCopies(prev => prev.map(c => c.id === id ? { ...c, tags } : c))
   }
 
-  const selectCls = 'text-sm border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300 dark:focus:ring-slate-600'
+  const selectCls = 'text-sm border border-line dark:border-line-dark rounded-md px-3 py-2 bg-card dark:bg-card-dark text-ink-soft dark:text-ink-soft-dark focus:outline-none focus:ring-2 focus:ring-accent/40 dark:focus:ring-accent-dark/40'
 
   return (
     <div>
       {/* Filtros — linha 1: modelos + nova copy */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="flex gap-1 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-1">
+        <div className="flex gap-1 bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark p-1">
           <button
             onClick={() => { setFilterModel(''); setFilterNshopLine('') }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === '' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${filterModel === '' ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}
           >
             Todos
           </button>
           {MODELS.map(m => (
             <button key={m} onClick={() => { const next = filterModel === m ? '' : m; setFilterModel(next); if (next !== 'Non-shop') setFilterNshopLine('') }}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${filterModel === m ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}>
+              className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${filterModel === m ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
               {m}
             </button>
           ))}
@@ -196,19 +196,19 @@ export default function SwipeBoard() {
 
         <div className="ml-auto flex items-center gap-2">
           {/* Toggle grid/lista */}
-          <div className="flex bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg p-0.5">
+          <div className="flex bg-card dark:bg-card-dark border border-line dark:border-line-dark rounded p-0.5">
             <button onClick={() => setViewMode('grid')} title="Grade"
-              className={`px-2 py-1 rounded text-sm transition-colors ${viewMode === 'grid' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
+              className={`px-2 py-1 rounded text-sm transition-colors ${viewMode === 'grid' ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark'}`}>
               ⊞
             </button>
             <button onClick={() => setViewMode('list')} title="Lista"
-              className={`px-2 py-1 rounded text-sm transition-colors ${viewMode === 'list' ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900' : 'text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
+              className={`px-2 py-1 rounded text-sm transition-colors ${viewMode === 'list' ? 'bg-ink dark:bg-ink-dark text-card dark:text-paper-dark' : 'text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark'}`}>
               ☰
             </button>
           </div>
           <button
             onClick={() => setModal({ mode: 'create', copy: null })}
-            className="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-medium rounded-xl hover:bg-slate-700 dark:hover:bg-slate-100 transition-colors whitespace-nowrap"
+            className="px-4 py-2 bg-accent dark:bg-accent-dark text-card text-sm font-medium rounded-md hover:opacity-90 transition-opacity whitespace-nowrap"
           >
             + Nova copy
           </button>
@@ -218,22 +218,22 @@ export default function SwipeBoard() {
       {/* Sub-filtro GMV/Grow — apenas quando Non-shop está ativo */}
       {filterModel === 'Non-shop' && (
         <div className="flex items-center gap-2 mb-2 px-1">
-          <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">Sub-linha:</span>
+          <span className="tab-label text-ink-soft dark:text-ink-soft-dark">Sub-linha:</span>
           {(['GMV', 'Grow'] as const).map(line => (
             <button key={line}
               onClick={() => setFilterNshopLine(filterNshopLine === line ? '' : line)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+              className={`px-3 py-1 rounded tab-label border transition-colors ${
                 filterNshopLine === line
                   ? line === 'GMV'
-                    ? 'bg-blue-500 border-blue-500 text-white'
-                    : 'bg-teal-500 border-teal-500 text-white'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-teal border-teal text-card'
+                    : 'bg-moss border-moss text-card'
+                  : 'bg-card dark:bg-card-dark border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'
               }`}>
               {line}
             </button>
           ))}
           {filterNshopLine && (
-            <button onClick={() => setFilterNshopLine('')} className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 ml-1">
+            <button onClick={() => setFilterNshopLine('')} className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark ml-1">
               × limpar
             </button>
           )}
@@ -246,14 +246,14 @@ export default function SwipeBoard() {
         <div className="flex gap-1.5">
           {COPY_TAGS.map(tag => (
             <button key={tag} onClick={() => setFilterTag(filterTag === tag ? '' : tag)}
-              className={`px-2.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${filterTag === tag ? TAG_ACTIVE_FILTER[tag] : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+              className={`px-2.5 py-1.5 rounded tab-label border transition-colors ${filterTag === tag ? TAG_ACTIVE_FILTER[tag] : 'bg-card dark:bg-card-dark border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
               {tag}
             </button>
           ))}
         </div>
 
         {/* Divisor */}
-        <div className="h-5 w-px bg-slate-200 dark:bg-slate-700 mx-1" />
+        <div className="h-5 w-px bg-line dark:bg-line-dark mx-1" />
 
         {/* Produto */}
         <select value={filterProduct} onChange={e => setFilterProduct(e.target.value)} className={selectCls}>
@@ -298,7 +298,7 @@ export default function SwipeBoard() {
           <div className="flex items-center gap-1">
             <input type="date" value={filterDateFrom} onChange={e => setFilterDateFrom(e.target.value)}
               className={`${selectCls} text-xs py-1.5 px-2 w-36`} />
-            <span className="text-slate-300 dark:text-slate-600">→</span>
+            <span className="text-ink-soft dark:text-ink-soft-dark">→</span>
             <input type="date" value={filterDateTo} onChange={e => setFilterDateTo(e.target.value)}
               className={`${selectCls} text-xs py-1.5 px-2 w-36`} />
           </div>
@@ -310,14 +310,14 @@ export default function SwipeBoard() {
           placeholder="Buscar por nome, hook, body..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className={`flex-1 min-w-52 ${selectCls} placeholder-slate-400 dark:placeholder-slate-600`}
+          className={`flex-1 min-w-52 ${selectCls} placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60`}
         />
 
         {/* Botão limpar filtros (aparece quando algum está ativo) */}
         {(filterTag || filterProduct || filterHookFormat || filterBodyFormat || filterDateFrom || filterDateTo || search) && (
           <button
             onClick={() => { setFilterTag(''); setFilterProduct(''); setFilterHookFormat(''); setFilterBodyFormat(''); setFilterDateFrom(''); setFilterDateTo(''); setShowCustomDate(false); setSearch('') }}
-            className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors whitespace-nowrap"
+            className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-2 py-1 rounded hover:bg-card dark:hover:bg-card-dark transition-colors whitespace-nowrap"
           >
             Limpar ×
           </button>
@@ -329,21 +329,21 @@ export default function SwipeBoard() {
         <div className="flex items-center gap-2 mb-5 px-1">
           <button
             onClick={() => setViewParent(null)}
-            className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1"
+            className="text-sm text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark transition-colors flex items-center gap-1"
           >
             ← Todas as copies
           </button>
-          <span className="text-slate-300 dark:text-slate-700">/</span>
-          <span className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate max-w-sm">
+          <span className="text-line dark:text-line-dark">/</span>
+          <span className="text-sm font-medium text-ink dark:text-ink-dark truncate max-w-sm">
             {viewParent.hook?.slice(0, 70) ?? '(sem hook)'}
           </span>
-          <span className="text-xs text-slate-400 dark:text-slate-600 ml-auto">
+          <span className="text-xs text-ink-soft dark:text-ink-soft-dark ml-auto">
             {(variationsByParent.get(viewParent.id)?.length ?? 0)} variações
           </span>
         </div>
       )}
 
-      <p className="text-sm text-slate-400 dark:text-slate-600 mb-4">
+      <p className="text-sm text-ink-soft dark:text-ink-soft-dark mb-4">
         {loading ? 'Carregando...' : (() => {
           const total = displayedCopies.length
           const label = `${total} cop${total === 1 ? 'y' : 'ies'}`
@@ -358,11 +358,11 @@ export default function SwipeBoard() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 h-52 animate-pulse" />
+            <div key={i} className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark h-52 animate-pulse" />
           ))}
         </div>
       ) : displayedCopies.length === 0 ? (
-        <div className="text-center py-24 text-slate-400 dark:text-slate-600">
+        <div className="text-center py-24 text-ink-soft dark:text-ink-soft-dark">
           <p className="text-lg font-medium">Nenhuma copy encontrada</p>
           <p className="text-sm mt-1">
             {isFiltering ? 'Tente ajustar os filtros' : 'Crie a primeira clicando em "+ Nova copy"'}
@@ -380,8 +380,8 @@ export default function SwipeBoard() {
               <div key={copy.id} className={variationCount > 0 ? 'relative pb-3 isolate' : 'relative'}>
                 {variationCount > 0 && (
                   <>
-                    <div className="absolute inset-x-4 top-0 bottom-0 translate-y-[7px] rounded-xl bg-slate-200 dark:bg-slate-700 -z-10" />
-                    <div className="absolute inset-x-8 top-0 bottom-0 translate-y-[14px] rounded-xl bg-slate-300/60 dark:bg-slate-600/40 -z-20" />
+                    <div className="absolute inset-x-4 top-0 bottom-0 translate-y-[7px] rounded-md bg-line dark:bg-line-dark -z-10" />
+                    <div className="absolute inset-x-8 top-0 bottom-0 translate-y-[14px] rounded-md bg-line/60 dark:bg-line-dark/60 -z-20" />
                   </>
                 )}
                 <CopyCard
@@ -426,7 +426,7 @@ export default function SwipeBoard() {
             const ListRow = ({ c, indent }: { c: Copy; indent?: boolean }) => (
               <div
                 onClick={() => setModal({ mode: 'view', copy: c })}
-                className={`flex items-center gap-3 px-4 py-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 ${indent ? 'border-l-[3px] border-l-indigo-300 dark:border-l-indigo-600' : ''}`}
+                className={`flex items-center gap-3 px-4 py-2.5 bg-card dark:bg-card-dark rounded border border-line dark:border-line-dark cursor-pointer transition-colors hover:bg-paper dark:hover:bg-paper-dark ${indent ? 'border-l-[3px] border-l-teal dark:border-l-teal-dark' : ''}`}
               >
                 {/* Expansor (só na raiz) */}
                 {!indent && (
@@ -434,44 +434,44 @@ export default function SwipeBoard() {
                     onClick={variationCount > 0 ? toggleExpand : undefined}
                     className={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded text-xs font-bold transition-colors ${
                       variationCount > 0
-                        ? 'text-indigo-500 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 cursor-pointer'
-                        : 'text-slate-200 dark:text-slate-700 cursor-default'
+                        ? 'text-teal dark:text-teal-dark hover:bg-teal/10 dark:hover:bg-teal-dark/10 cursor-pointer'
+                        : 'text-line dark:text-line-dark cursor-default'
                     }`}
                   >
                     {variationCount > 0 ? (isExpanded ? '▾' : '▸') : '·'}
                   </button>
                 )}
-                {indent && <span className="flex-shrink-0 text-xs text-indigo-400 dark:text-indigo-500 pl-1">↳</span>}
+                {indent && <span className="flex-shrink-0 text-xs text-teal dark:text-teal-dark pl-1">→</span>}
 
                 {/* Modelo */}
-                <span className={`flex-shrink-0 text-xs font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${MODEL_COLORS[c.business_model]}`}>
+                <span className={`flex-shrink-0 tab-label px-2 py-0.5 rounded whitespace-nowrap ${MODEL_COLORS[c.business_model]}`}>
                   {c.business_model}
                 </span>
                 {c.nshop_line && (
-                  <span className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap ${c.nshop_line === 'GMV' ? 'bg-blue-200 text-blue-800 dark:bg-blue-800/40 dark:text-blue-300' : 'bg-teal-100 text-teal-700 dark:bg-teal-800/40 dark:text-teal-300'}`}>
+                  <span className={`flex-shrink-0 tab-label px-2 py-0.5 rounded whitespace-nowrap ${c.nshop_line === 'GMV' ? 'bg-teal/10 text-teal dark:bg-teal-dark/15 dark:text-teal-dark' : 'bg-moss/10 text-moss dark:bg-moss-dark/15 dark:text-moss-dark'}`}>
                     {c.nshop_line}
                   </span>
                 )}
                 {c.name && (
-                  <span className="flex-shrink-0 text-xs font-mono text-slate-400 dark:text-slate-500 hidden sm:block truncate max-w-[90px]">
+                  <span className="flex-shrink-0 text-xs font-mono text-ink-soft dark:text-ink-soft-dark hidden sm:block truncate max-w-[90px]">
                     {c.name}
                   </span>
                 )}
 
                 {/* Hook */}
-                <p className="flex-1 text-sm text-slate-700 dark:text-slate-200 truncate min-w-0 font-medium">
-                  {c.hook ?? <span className="text-slate-300 dark:text-slate-600 italic text-xs">Sem hook</span>}
+                <p className="flex-1 text-sm text-ink dark:text-ink-dark truncate min-w-0 font-medium">
+                  {c.hook ?? <span className="text-ink-soft dark:text-ink-soft-dark italic text-xs">Sem hook</span>}
                 </p>
 
                 {/* Body */}
-                <p className="hidden lg:block w-52 flex-shrink-0 text-xs text-slate-400 dark:text-slate-500 truncate">
+                <p className="hidden lg:block w-52 flex-shrink-0 text-xs text-ink-soft dark:text-ink-soft-dark truncate">
                   {c.body ?? ''}
                 </p>
 
                 {/* Tags */}
                 <div className="flex-shrink-0 flex gap-1">
                   {c.tags?.slice(0, 2).map(tag => (
-                    <span key={tag} className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${TAG_COLORS[tag] ?? 'bg-slate-100 text-slate-600'}`}>
+                    <span key={tag} className={`tab-label px-1.5 py-0.5 rounded ${TAG_COLORS[tag] ?? 'bg-ink-soft/10 text-ink-soft'}`}>
                       {tag}
                     </span>
                   ))}
@@ -479,7 +479,7 @@ export default function SwipeBoard() {
 
                 {/* Contador de variações na raiz (quando fechado) */}
                 {!indent && variationCount > 0 && !isExpanded && (
-                  <span className="flex-shrink-0 text-xs text-indigo-400 dark:text-indigo-500 font-medium whitespace-nowrap">
+                  <span className="flex-shrink-0 text-xs text-teal dark:text-teal-dark font-medium whitespace-nowrap">
                     {variationCount} var.
                   </span>
                 )}
@@ -488,16 +488,16 @@ export default function SwipeBoard() {
                 <div className="flex-shrink-0 flex gap-1" onClick={e => e.stopPropagation()}>
                   {c.tags?.includes('Rascunho') && (
                     <button onClick={() => handlePublish(c.id)}
-                      className="text-xs text-amber-600 dark:text-amber-400 hover:underline px-1">
+                      className="text-xs text-amber dark:text-amber-dark hover:underline px-1">
                       Publicar
                     </button>
                   )}
                   <button onClick={() => setModal({ mode: 'edit', copy: c })}
-                    className="text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white px-2 py-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    className="text-xs text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark px-2 py-1 rounded hover:bg-paper dark:hover:bg-paper-dark transition-colors">
                     Editar
                   </button>
                   <button onClick={() => handleDelete(c.id)}
-                    className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                    className="text-xs text-accent dark:text-accent-dark hover:opacity-70 px-2 py-1 rounded transition-colors">
                     Excluir
                   </button>
                 </div>

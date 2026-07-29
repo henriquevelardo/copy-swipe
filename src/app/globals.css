@@ -2,12 +2,59 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-sans: var(--font-plex-sans), sans-serif;
+  --font-display: var(--font-plex-condensed), sans-serif;
+  --font-mono: var(--font-plex-mono), monospace;
+
+  /* Paper & ink — the binder this app lives in */
+  --color-paper: #ECE7DA;
+  --color-paper-dark: #171613;
+  --color-card: #FAF8F1;
+  --color-card-dark: #201E1A;
+  --color-ink: #1E1B16;
+  --color-ink-dark: #EAE5D8;
+  --color-ink-soft: #726C5D;
+  --color-ink-soft-dark: #948F7E;
+  --color-line: #D9D1BC;
+  --color-line-dark: #37332A;
+
+  /* Signature stamps — grounded in the swipe-file / continuity-binder world */
+  --color-accent: #AE3620;
+  --color-accent-dark: #E2694A;
+  --color-teal: #12403F;
+  --color-teal-dark: #55BDB3;
+  --color-plum: #5B3A5E;
+  --color-plum-dark: #C08FC4;
+  --color-amber: #8F6208;
+  --color-amber-dark: #E0A836;
+  --color-moss: #3E5029;
+  --color-moss-dark: #93BE6C;
+}
+
 body {
-  background: #f8fafc;
-  color: #0f172a;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 .dark body {
-  background: #0f172a;
-  color: #f1f5f9;
+  background: var(--color-paper-dark);
+  color: var(--color-ink-dark);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-card);
+}
+
+/* ── Filed-tab label: the one recurring device every classification
+   in this app (status, model, section header) is built from ── */
+.tab-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
 }

@@ -19,8 +19,8 @@ const toForm = (p: Product): FormState => ({
 })
 
 // ── Bloco editável, auto-resize ─────────────────────────────────
-function EditBlock({ label, value, onChange, emoji, rows = 3 }: {
-  label: string; value: string; onChange: (v: string) => void; emoji?: string; rows?: number
+function EditBlock({ label, value, onChange, rows = 3 }: {
+  label: string; value: string; onChange: (v: string) => void; rows?: number
 }) {
   const taRef = useRef<HTMLTextAreaElement>(null)
   useEffect(() => {
@@ -31,9 +31,9 @@ function EditBlock({ label, value, onChange, emoji, rows = 3 }: {
   }, [value])
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
-      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">
-        {emoji ? `${emoji} ` : ''}{label}
+    <div className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark p-5">
+      <p className="tab-label text-ink-soft dark:text-ink-soft-dark mb-2">
+        {label}
       </p>
       <textarea
         ref={taRef}
@@ -41,7 +41,7 @@ function EditBlock({ label, value, onChange, emoji, rows = 3 }: {
         onChange={e => onChange(e.target.value)}
         placeholder="—"
         rows={rows}
-        className="w-full text-base text-slate-800 dark:text-slate-100 leading-relaxed bg-transparent resize-none focus:outline-none placeholder-slate-300 dark:placeholder-slate-600"
+        className="w-full text-base text-ink dark:text-ink-dark leading-relaxed bg-transparent resize-none focus:outline-none placeholder-ink-soft/50 dark:placeholder-ink-soft-dark/50"
       />
     </div>
   )
@@ -127,40 +127,40 @@ export default function ProductDetailPage() {
     setDirty(false)
   }
 
-  if (loading) return <p className="text-sm text-slate-400 dark:text-slate-600">Carregando...</p>
-  if (!product || !form) return <p className="text-sm text-slate-400 dark:text-slate-600">Produto não encontrado.</p>
+  if (loading) return <p className="text-sm text-ink-soft dark:text-ink-soft-dark">Carregando...</p>
+  if (!product || !form) return <p className="text-sm text-ink-soft dark:text-ink-soft-dark">Produto não encontrado.</p>
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-24">
 
       {/* Voltar */}
       <Link href="/products"
-        className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+        className="inline-flex items-center gap-1 text-sm text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark transition-colors">
         ← Produtos
       </Link>
 
       {/* Header */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+      <div className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark overflow-hidden">
         <input ref={fileRef} type="file" accept="image/*" className="hidden"
           onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f) }} />
 
         {form.image_url ? (
-          <div className="relative w-full h-48 bg-slate-100 dark:bg-slate-800 group">
+          <div className="relative w-full h-48 bg-paper dark:bg-paper-dark group">
             <img src={form.image_url} alt={form.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
+            <div className="absolute inset-0 bg-ink/0 group-hover:bg-ink/40 transition-colors flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
               <button type="button" onClick={() => fileRef.current?.click()}
-                className="text-xs bg-white/90 text-slate-800 px-3 py-1.5 rounded-lg font-medium hover:bg-white transition-colors">
+                className="text-xs bg-card/90 text-ink px-3 py-1.5 rounded font-medium hover:bg-card transition-colors">
                 Trocar foto
               </button>
               <button type="button" onClick={() => update({ image_url: '' })}
-                className="text-xs bg-black/60 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-black/80 transition-colors">
+                className="text-xs bg-ink/70 text-card px-3 py-1.5 rounded font-medium hover:bg-ink/90 transition-colors">
                 Remover
               </button>
             </div>
           </div>
         ) : (
           <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-            className="w-full h-20 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 text-sm hover:text-slate-600 dark:hover:text-slate-300 transition-colors flex items-center justify-center">
+            className="w-full h-20 bg-paper dark:bg-paper-dark border-b border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark text-sm hover:text-ink dark:hover:text-ink-dark transition-colors flex items-center justify-center">
             {uploading ? 'Enviando...' : '+ Adicionar foto'}
           </button>
         )}
@@ -170,14 +170,14 @@ export default function ProductDetailPage() {
             value={form.name}
             onChange={e => update({ name: e.target.value })}
             placeholder="Nome do produto"
-            className="text-2xl font-bold text-slate-900 dark:text-white bg-transparent focus:outline-none w-full placeholder-slate-300 dark:placeholder-slate-600"
+            className="text-2xl font-bold font-display text-ink dark:text-ink-dark bg-transparent focus:outline-none w-full placeholder-ink-soft/50 dark:placeholder-ink-soft-dark/50"
           />
           <div className="flex gap-1.5 flex-wrap">
             {BUSINESS_MODELS.map(m => {
               const active = form.models.includes(m)
               return (
                 <button key={m} type="button" onClick={() => toggleModel(m)}
-                  className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${active ? `${MODEL_COLORS[m]} border-transparent` : 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'}`}>
+                  className={`tab-label px-2.5 py-1 rounded border transition-colors ${active ? `${MODEL_COLORS[m]} border-transparent` : 'border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark'}`}>
                   {active ? '✓ ' : ''}{m}
                 </button>
               )
@@ -188,37 +188,37 @@ export default function ProductDetailPage() {
 
       {/* Blocos de info, grandes e legíveis — sempre editáveis */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EditBlock label="Nicho" value={form.niche} onChange={v => update({ niche: v })} emoji="🎯" rows={2} />
-        <EditBlock label="Oferta" value={form.offer} onChange={v => update({ offer: v })} emoji="💰" rows={2} />
+        <EditBlock label="Nicho" value={form.niche} onChange={v => update({ niche: v })} rows={2} />
+        <EditBlock label="Oferta" value={form.offer} onChange={v => update({ offer: v })} rows={2} />
       </div>
 
-      <EditBlock label="Descrição do produto" value={form.description} onChange={v => update({ description: v })} emoji="📦" rows={4} />
-      <EditBlock label="Ingredientes / Componentes ativos" value={form.ingredients} onChange={v => update({ ingredients: v })} emoji="🧪" rows={3} />
-      <EditBlock label="Dores que resolve" value={form.pains} onChange={v => update({ pains: v })} emoji="⚡" rows={3} />
+      <EditBlock label="Descrição do produto" value={form.description} onChange={v => update({ description: v })} rows={4} />
+      <EditBlock label="Ingredientes / Componentes ativos" value={form.ingredients} onChange={v => update({ ingredients: v })} rows={3} />
+      <EditBlock label="Dores que resolve" value={form.pains} onChange={v => update({ pains: v })} rows={3} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EditBlock label="Público alvo" value={form.target_audience} onChange={v => update({ target_audience: v })} emoji="👥" rows={3} />
-        <EditBlock label="Avatar Non-shop" value={form.avatar} onChange={v => update({ avatar: v })} emoji="🎭" rows={3} />
+        <EditBlock label="Público alvo" value={form.target_audience} onChange={v => update({ target_audience: v })} rows={3} />
+        <EditBlock label="Avatar Non-shop" value={form.avatar} onChange={v => update({ avatar: v })} rows={3} />
       </div>
 
       {/* Copies vinculadas */}
       <div>
         <div className="flex items-center gap-2 mb-3">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+          <h2 className="tab-label text-ink-soft dark:text-ink-soft-dark">
             Copies deste produto
           </h2>
-          <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full">
+          <span className="text-xs bg-paper dark:bg-paper-dark text-ink-soft dark:text-ink-soft-dark px-2 py-0.5 rounded">
             {copies.length}
           </span>
         </div>
         {copies.length === 0 ? (
-          <p className="text-sm text-slate-400 dark:text-slate-600">Nenhuma copy vinculada ainda.</p>
+          <p className="text-sm text-ink-soft dark:text-ink-soft-dark">Nenhuma copy vinculada ainda.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {copies.map(c => (
-              <div key={c.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
-                {c.name && <p className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 mb-1">{c.name}</p>}
-                <p className="text-sm text-slate-700 dark:text-slate-200 line-clamp-3 leading-relaxed">{c.hook || <span className="italic text-slate-300">Sem hook</span>}</p>
+              <div key={c.id} className="bg-card dark:bg-card-dark rounded-md border border-line dark:border-line-dark p-4">
+                {c.name && <p className="text-xs font-mono font-semibold text-ink-soft dark:text-ink-soft-dark mb-1">{c.name}</p>}
+                <p className="text-sm text-ink dark:text-ink-dark line-clamp-3 leading-relaxed">{c.hook || <span className="italic text-ink-soft/50 dark:text-ink-soft-dark/50">Sem hook</span>}</p>
               </div>
             ))}
           </div>
@@ -228,10 +228,10 @@ export default function ProductDetailPage() {
       {/* Barra de salvar — flutuante, só aparece com mudanças */}
       {dirty && (
         <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center px-4 pb-4">
-          <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl shadow-2xl px-5 py-3 flex items-center gap-4">
+          <div className="bg-ink dark:bg-ink-dark text-card dark:text-paper-dark rounded-md shadow-2xl px-5 py-3 flex items-center gap-4">
             <span className="text-sm font-medium">Alterações não salvas</span>
             <button type="button" onClick={handleSave} disabled={saving}
-              className="text-sm font-semibold bg-white/15 dark:bg-slate-900/10 px-4 py-1.5 rounded-lg hover:bg-white/25 dark:hover:bg-slate-900/20 transition-colors disabled:opacity-50">
+              className="text-sm font-semibold bg-accent dark:bg-accent-dark text-card px-4 py-1.5 rounded hover:opacity-90 transition-opacity disabled:opacity-50">
               {saving ? 'Salvando...' : 'Salvar'}
             </button>
           </div>

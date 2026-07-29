@@ -4,28 +4,28 @@ export type NshopLine = 'GMV' | 'Grow'
 export const BUSINESS_MODELS: BusinessModel[] = ['TikTok Shop', 'Non-shop', 'DTC']
 
 export const MODEL_COLORS: Record<string, string> = {
-  'TikTok Shop': 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
-  'Non-shop':    'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  'DTC':         'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  'TikTok Shop': 'bg-teal/10 text-teal dark:bg-teal-dark/15 dark:text-teal-dark',
+  'Non-shop':    'bg-plum/10 text-plum dark:bg-plum-dark/15 dark:text-plum-dark',
+  'DTC':         'bg-accent/10 text-accent dark:bg-accent-dark/15 dark:text-accent-dark',
 }
 
 export const COPY_TAGS = ['Rodando', 'Teste', 'Validada', 'Pendente', 'Rascunho'] as const
 export type CopyTag = typeof COPY_TAGS[number]
 
 export const TAG_COLORS: Record<string, string> = {
-  'Rodando':  'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  'Teste':    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  'Validada': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  'Pendente': 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
-  'Rascunho': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  'Rodando':  'bg-moss/10 text-moss dark:bg-moss-dark/15 dark:text-moss-dark',
+  'Teste':    'bg-amber/10 text-amber dark:bg-amber-dark/15 dark:text-amber-dark',
+  'Validada': 'bg-teal/10 text-teal dark:bg-teal-dark/15 dark:text-teal-dark',
+  'Pendente': 'bg-ink-soft/10 text-ink-soft dark:bg-ink-soft-dark/15 dark:text-ink-soft-dark',
+  'Rascunho': 'bg-plum/10 text-plum dark:bg-plum-dark/15 dark:text-plum-dark',
 }
 
 export const TAG_ACTIVE_FILTER: Record<string, string> = {
-  'Rodando':  'bg-green-100 border-green-300 text-green-700 dark:bg-green-900/30 dark:border-green-700 dark:text-green-400',
-  'Teste':    'bg-yellow-100 border-yellow-300 text-yellow-700 dark:bg-yellow-900/30 dark:border-yellow-700 dark:text-yellow-400',
-  'Validada': 'bg-blue-100 border-blue-300 text-blue-700 dark:bg-blue-900/30 dark:border-blue-700 dark:text-blue-400',
-  'Pendente': 'bg-slate-200 border-slate-300 text-slate-700 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-300',
-  'Rascunho': 'bg-purple-100 border-purple-300 text-purple-700 dark:bg-purple-900/30 dark:border-purple-700 dark:text-purple-400',
+  'Rodando':  'bg-moss/10 border-moss/30 text-moss dark:bg-moss-dark/15 dark:border-moss-dark/40 dark:text-moss-dark',
+  'Teste':    'bg-amber/10 border-amber/30 text-amber dark:bg-amber-dark/15 dark:border-amber-dark/40 dark:text-amber-dark',
+  'Validada': 'bg-teal/10 border-teal/30 text-teal dark:bg-teal-dark/15 dark:border-teal-dark/40 dark:text-teal-dark',
+  'Pendente': 'bg-ink-soft/10 border-ink-soft/30 text-ink-soft dark:bg-ink-soft-dark/15 dark:border-ink-soft-dark/40 dark:text-ink-soft-dark',
+  'Rascunho': 'bg-plum/10 border-plum/30 text-plum dark:bg-plum-dark/15 dark:border-plum-dark/40 dark:text-plum-dark',
 }
 
 export interface Annotation {

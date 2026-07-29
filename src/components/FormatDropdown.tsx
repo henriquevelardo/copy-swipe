@@ -60,15 +60,15 @@ export function FormatDropdown({
   }
 
   const btnCls = invertedStyle
-    ? 'bg-slate-800 dark:bg-slate-100 border-slate-700 dark:border-slate-300 text-slate-300 dark:text-slate-600'
-    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
+    ? 'bg-ink dark:bg-ink-dark border-ink dark:border-ink-dark text-card dark:text-paper-dark'
+    : 'bg-card dark:bg-card-dark border-line dark:border-line-dark text-ink-soft dark:text-ink-soft-dark'
 
   return (
     <div className="relative flex-shrink-0" ref={ref}>
       <button
         type="button"
         onClick={e => { e.stopPropagation(); setOpen(o => !o) }}
-        className={`text-xs border rounded-full px-2 py-0.5 focus:outline-none transition-colors truncate max-w-[130px] ${btnCls}`}
+        className={`text-xs border rounded px-2 py-0.5 focus:outline-none transition-colors truncate max-w-[130px] ${btnCls}`}
       >
         {value || '— formato —'}
       </button>
@@ -76,11 +76,11 @@ export function FormatDropdown({
       {open && (
         <div
           onClick={e => e.stopPropagation()}
-          className="absolute top-full left-0 mt-1 z-[60] bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-1 min-w-[170px]"
+          className="absolute top-full left-0 mt-1 z-[60] bg-card dark:bg-card-dark border border-line dark:border-line-dark rounded-md shadow-lg py-1 min-w-[170px]"
         >
           {/* Limpar seleção */}
           <button type="button" onClick={() => { onChange(''); setOpen(false) }}
-            className="w-full text-left text-xs px-3 py-1.5 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            className="w-full text-left text-xs px-3 py-1.5 text-ink-soft dark:text-ink-soft-dark hover:bg-paper dark:hover:bg-paper-dark transition-colors">
             — formato —
           </button>
 
@@ -88,14 +88,14 @@ export function FormatDropdown({
           {allFormats.map(f => (
             <button key={f} type="button"
               onClick={() => { onChange(f); setOpen(false) }}
-              className={`w-full text-left text-xs px-3 py-1.5 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${value === f ? 'text-slate-900 dark:text-white font-semibold' : 'text-slate-600 dark:text-slate-300'}`}>
+              className={`w-full text-left text-xs px-3 py-1.5 hover:bg-paper dark:hover:bg-paper-dark transition-colors ${value === f ? 'text-ink dark:text-ink-dark font-semibold' : 'text-ink-soft dark:text-ink-soft-dark'}`}>
               {value === f ? '✓ ' : ''}{f}
             </button>
           ))}
 
           {/* Adicionar novo */}
-          <div className="border-t border-slate-100 dark:border-slate-700 mt-1 pt-1.5 px-2 pb-1.5">
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5 px-1">Novo formato</p>
+          <div className="border-t border-line dark:border-line-dark mt-1 pt-1.5 px-2 pb-1.5">
+            <p className="tab-label text-ink-soft dark:text-ink-soft-dark mb-1.5 px-1">Novo formato</p>
             <div className="flex gap-1">
               <input
                 type="text"
@@ -103,10 +103,10 @@ export function FormatDropdown({
                 onChange={e => setNewFormat(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd() } }}
                 placeholder="Nome do formato..."
-                className="flex-1 text-xs border border-slate-200 dark:border-slate-600 rounded-lg px-2 py-1 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-300 dark:focus:ring-slate-500"
+                className="flex-1 text-xs border border-line dark:border-line-dark rounded px-2 py-1 bg-paper dark:bg-paper-dark text-ink dark:text-ink-dark placeholder-ink-soft/60 dark:placeholder-ink-soft-dark/60 focus:outline-none focus:ring-1 focus:ring-accent/40 dark:focus:ring-accent-dark/40"
               />
               <button type="button" onClick={handleAdd} disabled={!newFormat.trim()}
-                className="text-xs px-2.5 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg disabled:opacity-40 transition-colors font-medium">
+                className="text-xs px-2.5 py-1 bg-accent dark:bg-accent-dark text-card rounded disabled:opacity-40 transition-colors font-medium">
                 +
               </button>
             </div>

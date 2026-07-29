@@ -19,10 +19,10 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="ml-auto text-lg text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      className="tab-label ml-auto px-2.5 py-1.5 rounded text-ink-soft dark:text-ink-soft-dark hover:text-ink dark:hover:text-ink-dark hover:bg-paper dark:hover:bg-paper-dark transition-colors"
       title={dark ? 'Modo claro' : 'Modo escuro'}
     >
-      {dark ? '☀' : '☾'}
+      {dark ? 'Claro' : 'Escuro'}
     </button>
   )
 }
