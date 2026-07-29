@@ -72,6 +72,14 @@ export default function CopyCard({
         isVariation ? 'border-l-4 border-l-teal dark:border-l-teal-dark' : '',
       ].join(' ')}
     >
+      {/* Selo discreto indicando variações */}
+      {hasVariations && (
+        <span className="absolute -top-2 -right-2 z-10 flex items-center justify-center w-6 h-6 rounded-full bg-teal dark:bg-teal-dark text-card text-[10px] font-mono font-bold border-2 border-paper dark:border-paper-dark"
+          title={`${total} variaç${total > 1 ? 'ões' : 'ão'}`}>
+          {total}
+        </span>
+      )}
+
       {/* Overlay de drop */}
       {isDragOver && !isVariation && (
         <div className="absolute inset-0 z-10 rounded-md bg-accent/10 dark:bg-accent-dark/10 border-2 border-dashed border-accent dark:border-accent-dark flex flex-col items-center justify-center gap-2 backdrop-blur-[1px]">

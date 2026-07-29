@@ -365,13 +365,7 @@ export default function SwipeBoard() {
             const isDragOver = dragOverId === copy.id && draggedId !== copy.id
 
             return (
-              <div key={copy.id} className={variationCount > 0 ? 'relative pb-3 isolate' : 'relative'}>
-                {variationCount > 0 && (
-                  <>
-                    <div className="absolute inset-x-4 top-0 bottom-0 translate-y-[7px] rounded-md bg-line dark:bg-line-dark -z-10" />
-                    <div className="absolute inset-x-8 top-0 bottom-0 translate-y-[14px] rounded-md bg-line/60 dark:bg-line-dark/60 -z-20" />
-                  </>
-                )}
+              <div key={copy.id} className="relative">
                 <CopyCard
                   copy={copy}
                   variations={variations}
