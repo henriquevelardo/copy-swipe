@@ -10,5 +10,5 @@ export default function MainContainer({ children }: { children: React.ReactNode 
     return <main className="flex-1 overflow-hidden">{children}</main>
   }
 
-  return <main className="flex-1 overflow-y-auto max-w-7xl mx-auto px-6 py-6 w-full">{children}</main>
+  return <main className="flex-1 overflow-y-auto px-6 py-6 w-full">{children}</main>
 }
